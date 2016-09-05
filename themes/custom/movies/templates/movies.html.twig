@@ -121,31 +121,21 @@
                 <a href="http://aai_challenge.dd:8083/new_video_form" class="use-ajax" data-accepts="application/vnd.drupal-modal">Add a Video!</a>
             </div>
         <div class="row">
-            <div class="movie-list, container, col-sm-12">
-                <div class="row">
-                    <h4>
-                        <div class="col-sm-8">Video</div>
-                        <div class="col-sm-1">Views</div>
-                        <div class="col-sm-1">Votes</div>
-                        <div class="col-sm-2">Add A Vote!</div><br>
-                    </h4>
-                </div>
+            <div class="movie-list, container, col-sm-6">
                 <div class="row">
                     <ul>
                         {% for video in videos %}
-
                             <div class="row, movie-list-items">
                                 {#<div class="col-sm-8">{{ link(video.attributes.title, 'http://aai-video-share.dd:8083/view_video/' ~ video.id ) }}</div>#}
-                                <div><iframe width="420" height="315" src="https://www.youtube.com/embed/7I79m7_kAnA"></iframe>
+                                <div class="col-sm-2">{{ video.attributes.view_tally }} Votes</div>
+                                <div class="col-sm-2">{{ video.attributes.vote_tally }} Views</div>
+                                <div class="col-sm-2">{{ link('Vote Up', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</div>
+                                <div class="col-sm-3">{{ link('Vote Down', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</div>
+                                <div><iframe width="420" height="315" src="https://{{ video.attributes.embedURL }}"></iframe>
                                 </div>
-                                <div class="col-sm-1">{{ video.attributes.view_tally }}</div>
-                                <div class="col-sm-1">{{ video.attributes.vote_tally }}</div>
-                                <div class="col-sm-1">{{ link('Up', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</div>
-                                <div class="col-sm-1">{{ link('Down', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</div>
                             </div><br>
 
                         {% endfor %}
-
                     </ul>
                 </div>
             </div>

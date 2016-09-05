@@ -23,21 +23,32 @@ class ProofAPIController extends ControllerBase
    */
   public function allVideos()
   {
-    $response = $this->proofAPIRequests->listAllVideos();
-    $createdAt = array();
+      $response = $this->proofAPIRequests->listAllVideos();
+      $createdAt = array();
+
     foreach ($response as $video) {
-      $createdAt[] = $video['attributes']['created_at'];
+        $createdAt[] = $video['attributes']['created_at'];
     }
+
     array_multisort($createdAt, SORT_DESC, $response);
+
+      for ($i = 0; $i < count($response); $i++) {
+          $string = $response[$i]['attributes']['url'];
+          $embedURL = $this->proofAPIUtilities->convertYoutube($string);
+          $response[$i]['attributes']['embedURL'] = $embedURL;
+          var_dump($response[$i]['attributes']['embedURL']);
+      };
+
     $page = array(
-      '#theme' => 'movies',
-      '#videos' => $response,
-      '#redirectTo' => 'proof_api.all_videos',
-      '#cache' => array
+        '#theme' => 'movies',
+        '#videos' => $response,
+        '#redirectTo' => 'proof_api.all_videos',
+        '#cache' => array
       (
         'max-age' => 0,
       ),
     );
+
     return $page;
   }
 
