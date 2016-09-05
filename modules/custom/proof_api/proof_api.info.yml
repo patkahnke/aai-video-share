@@ -1,0 +1,5 @@
+name: Proof API
+type: module
+description: "Module for connecting to the Proof API"
+package: custom
+core: 8.x

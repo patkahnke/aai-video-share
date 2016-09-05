@@ -1,0 +1,7 @@
+services:
+  proof_api.proof_api_requests:
+    class: Drupal\proof_api\ProofAPIRequests\ProofAPIRequests
+  proof_api.proof_api_forms:
+    class: Drupal\proof_api\ProofAPIForms\NewMovieForm
+  proof_api.proof_api_utilities:
+    class: Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities
