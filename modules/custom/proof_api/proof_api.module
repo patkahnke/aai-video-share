@@ -1,17 +1,17 @@
 <?php
 
-function movies_theme()
+function videos_theme()
 {
   return array
   (
-    'movies' => array
+    'videos' => array
     (
       'variables' => array
       (
           'videos' => null,
           'redirectTo' => null,
       ),
-      'template' => 'movies',
+      'template' => 'videos',
     ),
   );
 }

@@ -1,11 +1,14 @@
 <?php
 
 namespace Drupal\proof_api\Controller;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Ajax\CommandInterface;
 
 class ProofAPIController extends ControllerBase
 {
@@ -36,11 +39,10 @@ class ProofAPIController extends ControllerBase
           $string = $response[$i]['attributes']['url'];
           $embedURL = $this->proofAPIUtilities->convertYoutube($string);
           $response[$i]['attributes']['embedURL'] = $embedURL;
-          var_dump($response[$i]['attributes']['embedURL']);
       };
 
     $page = array(
-        '#theme' => 'movies',
+        '#theme' => 'videos',
         '#videos' => $response,
         '#redirectTo' => 'proof_api.all_videos',
         '#cache' => array
@@ -48,6 +50,8 @@ class ProofAPIController extends ControllerBase
         'max-age' => 0,
       ),
     );
+
+    $page['#attached']['library'] = 'proof_api/proof_api.commands';
 
     return $page;
   }
@@ -130,6 +134,20 @@ class ProofAPIController extends ControllerBase
     $json = json_decode($response, true);
     $url = $json['data']['attributes']['url'];
     return new TrustedRedirectResponse($url);
+  }
+
+  public function newView($videoID)
+  {
+      $this->proofAPIRequests->postNewView($videoID);
+      return new Response();
+  }
+
+  public function readMessageCallback($method, $mid) {
+      $message = proof_api_load_message($mid);
+
+      $response = new AjaxResponse();
+
+      $response->addCommand( new ReadMessageCommand($message));
   }
 
   public static function create(ContainerInterface $container)

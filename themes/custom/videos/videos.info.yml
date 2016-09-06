@@ -1,0 +1,10 @@
+# info file for movie_share theme
+
+name: Videos
+type: theme
+description: 'A custom theme for the AAI Video Share page.'
+core: 8.x
+base theme: bootstrap
+package: custom
+libraries:
+  - proof_api/videos
