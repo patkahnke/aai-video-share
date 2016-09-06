@@ -71,3 +71,11 @@ proof_api.new_view:
     _title: "Log a View"
   requirements:
     _permission: 'access content'
+
+proof_api.read_message_callback:
+  path: '/read_message_callback'
+  defaults:
+    _controller: '\Drupal\proof_api\Controller\ProofAPIController::readMessageCallback'
+    _title: "Create an Ajax Response Object"
+  requirements:
+    _permission: 'access content'

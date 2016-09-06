@@ -1,4 +1,4 @@
-proof_api.commands:
+proof-api:
   version: VERSION
   js:
     js/commands.js: {}

@@ -41,7 +41,7 @@ class ProofAPIController extends ControllerBase
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
-    $page = array(
+    $page[] = array(
         '#theme' => 'videos',
         '#videos' => $response,
         '#redirectTo' => 'proof_api.all_videos',
@@ -51,7 +51,14 @@ class ProofAPIController extends ControllerBase
       ),
     );
 
-    $page['#attached']['library'] = 'proof_api/proof_api.commands';
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+
+      $response = new AjaxResponse($page);
+
+      $response->addCommand(new ReadMessageCommand($page));
+
+
+
 
     return $page;
   }
@@ -142,12 +149,12 @@ class ProofAPIController extends ControllerBase
       return new Response();
   }
 
-  public function readMessageCallback($method, $mid) {
-      $message = proof_api_load_message($mid);
+  public function readMessageCallback($method) {
+      $message = $this->allVideos();
 
       $response = new AjaxResponse();
 
-      $response->addCommand( new ReadMessageCommand($message));
+      $response->addCommand(new ReadMessageCommand($message));
   }
 
   public static function create(ContainerInterface $container)
