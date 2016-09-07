@@ -42,12 +42,41 @@ class ProofAPIUtilities {
     return $videoMatches;
   }
 
-//  adapted from http://syframework.alwaysdata.net/convert-youtube-url-to-iframe
-    function convertYoutube($string) {
+    function checkVideoOrigin($url) {
+        $videoType = null;
+
+        if (preg_match('/youtu/', $url)) {
+            $videoType = 'youtube';
+        } else if (preg_match('/vimeo/', $url)) {
+            $videoType = 'vimeo';
+        }
+        return $videoType;
+    }
+
+    function convertYoutube($url) {
         return preg_replace(
             "/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
             "www.youtube.com/embed/$2",
-            $string
-        );
+            $url);
+    }
+
+    function convertVimeo($url) {
+        $vimeoID = preg_replace('#^https?://vimeo.com/#', '', $url);
+        $embedURL = 'player.vimeo.com/video/' . $vimeoID;
+
+        return $embedURL;
+    }
+
+    function convertToEmbedURL($url) {
+        $videoType = $this->checkVideoOrigin($url);
+        $embedURL = null;
+
+        if ($videoType === 'youtube') {
+            $embedURL = $this->convertYoutube($url);
+        } else if ($videoType === 'vimeo') {
+            $embedURL = $this->convertVimeo($url);
+        }
+
+        return $embedURL;
     }
 }

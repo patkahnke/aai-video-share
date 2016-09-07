@@ -1,0 +1,17 @@
+proof_api.all_videos:
+  title: All Videos
+  description: 'A link to all the videos'
+  route_name: proof_api.all_videos
+  menu_name: main
+
+proof_api.top_ten_by_views:
+  title: Most Viewed Videos
+  description: 'A link to the top ten most viewed videos'
+  route_name: proof_api.top_ten_by_views
+  menu_name: main
+
+proof_api.top_ten_by_votes:
+  title: Highest Voted Videos
+  description: 'A link to the ten highest voted videos'
+  route_name: proof_api.top_ten_by_votes
+  menu_name: main

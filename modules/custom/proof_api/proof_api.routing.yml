@@ -72,10 +72,11 @@ proof_api.new_view:
   requirements:
     _permission: 'access content'
 
-proof_api.read_message_callback:
-  path: '/read_message_callback'
-  defaults:
-    _controller: '\Drupal\proof_api\Controller\ProofAPIController::readMessageCallback'
-    _title: "Create an Ajax Response Object"
-  requirements:
-    _permission: 'access content'
+#proof_api.build_iframes_callback:
+#  path: '/build_iframes_callback/{method}'
+#  defaults:
+#    _controller: '\Drupal\proof_api\Controller\ProofAPIController::buildIFramesCallback'
+#    _title: "Create an Ajax Response Object"
+#  requirements:
+#    _permission: 'access content'
+#    method: 'nojs|ajax'

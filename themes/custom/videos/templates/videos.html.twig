@@ -64,26 +64,37 @@
                 <a href="http://aai_challenge.dd:8083/new_video_form" class="use-ajax" data-accepts="application/vnd.drupal-modal">Add a Video!</a><br>
             </div><br>
 
+
+            {#<div class="new-video-form, row, col-sm-12">#}
+                {#<a href="{{ proof_api.new_video}}"  class="use-ajax">Add a Video!</a><br>#}
+                {#<a href="http://aai_challenge.dd:8083/all_videos">All Videos</a><br>#}
+                {#<a href="http://aai_challenge.dd:8083/top_ten_by_views">Most Viewed Videos</a><br>#}
+                {#<a href="http://aai_challenge.dd:8083/top_ten_by_votes">Highest Voted Videos</a><br>#}
+                {#<div class="col-md-12"><span>- - -</span></div>#}
+            {#</div><br>#}
+
            {% for video in videos %}
-               <div id="movies" class="row">
-               {#<div class="col-sm-8">{{ link(video.attributes.title, 'http://aai-video-share.dd:8083/view_video/' ~ video.id ) }}</div>#}
-               {#<div class="col-sm-8">#}
-                   {#<span class="video-labels">Views: {{ video.attributes.view_tally }}</span>#}
-                   {#<span class="video-labels">Votes: {{ video.attributes.vote_tally }}</span>#}
-                   {#<span class="video-labels">{{ link('+1', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</span>#}
-                   {#<span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>#}
+               {#<div id="movies" class="row">#}
                {#</div>#}
-               {#<div class="col-sm-2"></div>#}
-               {#<div class="col-sm-2"></div>#}
-               {#<div class="col-sm-3"></div>#}
-                   {#<iframe id="proof-api-videos"#}
-                           {#width="420" height="315"#}
-                           {#src="https://{{ video.attributes.embedURL }}"#}
-                           {#frameborder="0"#}
-                           {#style="border: solid 4px #37474F"#}
-                   {#></iframe>#}
-               {#</div><br>#}
-           {% endfor %}
+               {#<div class="col-sm-8">{{ link(video.attributes.title, 'http://aai-video-share.dd:8083/view_video/' ~ video.id ) }}</div>#}
+
+               <div class="container, col-sm-12">
+                <div class="col-sm-12">
+                   <span class="video-labels">Views: {{ video.attributes.view_tally }}</span>
+                   <span class="video-labels">Votes: {{ video.attributes.vote_tally }}</span>
+                   <span class="video-labels">{{ link('+1', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+                   <span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+                </div>
+               <div class="col-sm-12" align="center">
+                   <iframe id="proof-api-videos"
+                           width="640" height="480"
+                           src="https://{{ video.attributes.embedURL }}"
+                           frameborder="0"
+                           style="border: solid 4px #37474F"
+                   ></iframe>
+               </div>
+                   <div class="col-md-12"><span>- - -</span></div>
+               </div>
 
             <script type="text/javascript">
                 var tag = document.createElement('script');
@@ -94,7 +105,7 @@
 
                 var player;
                 function onYouTubeIframeAPIReady() {
-                    player = new YT.Player('proof-api-videos', {
+                    player = new YT.Player('player', {
                         events: {
                             'onStateChange': onPlayerStateChange
                         }
@@ -110,6 +121,7 @@
                         console.log("onPlayerStateChange is firing")
                     }
                 }
+
                 function stopVideo() {
                     player.stopVideo();
                 }
@@ -121,21 +133,21 @@
 {#//                        voted = true;#}
                 {#}#}
 
-            </script>
+         </script>
+           {% endfor %}
+
+        <div class="row">
+            <div class="movie-list, container, col-sm-6">
+                <div class="row">
+                    <ul>
+                        {% for video in videos %}
 
 
-        {#<div class="row">#}
-            {#<div class="movie-list, container, col-sm-6">#}
-                {#<div class="row">#}
-                    {#<ul>#}
-                        {#{% for video in videos %}#}
-
-
-                        {#{% endfor %}#}
-                    {#</ul>#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
 
             {%
             set content_classes = [

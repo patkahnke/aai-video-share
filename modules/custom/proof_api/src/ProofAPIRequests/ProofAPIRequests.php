@@ -8,7 +8,7 @@ namespace Drupal\proof_api\ProofAPIRequests;
 
 class ProofAPIRequests
 {
-    public function listAllVideos()
+    public function getAllVideos()
     {
       $ch = curl_init();
 
@@ -28,44 +28,6 @@ class ProofAPIRequests
       $response = $json['data'];
 
       return $response;
-    }
-
-    public function listTopTenByViews()
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://proofapi.herokuapp.com/videos?page&per_page');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'X-Auth-Token: kFDTf2t7HVfA24Red68sE31K'
-        ));
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return $response;
-    }
-
-    public function listTopTenByVotes()
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://proofapi.herokuapp.com/videos?page&per_page');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'X-Auth-Token: kFDTf2t7HVfA24Red68sE31K'
-        ));
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return $response;
     }
 
     public function postNewMovie($title, $url, $slug)

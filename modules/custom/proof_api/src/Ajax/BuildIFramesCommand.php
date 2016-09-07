@@ -19,7 +19,7 @@ class BuildIFramesCommand implements CommandInterface {
     public function render() {
         return array(
             'command' => 'buildIFrames',
-            'content' => $this->page->content,
+            'content' => $this->page,
         );
     }
 }

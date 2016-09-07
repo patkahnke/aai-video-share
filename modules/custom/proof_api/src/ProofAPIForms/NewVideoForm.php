@@ -59,21 +59,23 @@ class NewVideoForm extends FormBase
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $url = $form_state->getValue('url');
     $slug = $form_state->getValue('slug');
-    $response = $this->proofAPIRequests->listAllVideos();
+    $response = $this->proofAPIRequests->getAllVideos();
     $slugNoDashes = str_replace('-', '', $slug);
     $slugLowercase = ctype_lower($slugNoDashes);
 
     $videosMatch = $this->proofAPIUtilities->videosMatch($url, $slug, $response);
+    $videoOrigin = $this->proofAPIUtilities->checkVideoOrigin($url);
 
     if (!UrlHelper::isValid($url, TRUE)) {
-      $form_state->setErrorByName('url', t('Sorry, the video url is invalid.'));
+        $form_state->setErrorByName('url', t('Sorry, the video url is invalid.'));
     } else if ($videosMatch) {
         $form_state->setErrorByName('title', t('Sorry, this appears to be a duplicate video entry.'));
     } else if (!$slugLowercase) {
-      $form_state->setErrorByName('slug', t('Sorry, the slug appears to be in the wrong format.'));
+        $form_state->setErrorByName('slug', t('Sorry, the slug appears to be in the wrong format.'));
+//    } else if ($videoOrigin === null) {
+//        $form_state->setErrorByName('url', t('Sorry, this app only supports YouTube and Vimeo videos at this time.'));
     }
   }
-
 
   /**
    * @param array $form

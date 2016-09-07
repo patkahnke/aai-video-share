@@ -4,11 +4,11 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\proof_api\Ajax\BuildIFramesCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Ajax\CommandInterface;
 
 class ProofAPIController extends ControllerBase
 {
@@ -26,7 +26,7 @@ class ProofAPIController extends ControllerBase
    */
   public function allVideos()
   {
-      $response = $this->proofAPIRequests->listAllVideos();
+      $response = $this->proofAPIRequests->getAllVideos();
       $createdAt = array();
 
     foreach ($response as $video) {
@@ -36,8 +36,8 @@ class ProofAPIController extends ControllerBase
     array_multisort($createdAt, SORT_DESC, $response);
 
       for ($i = 0; $i < count($response); $i++) {
-          $string = $response[$i]['attributes']['url'];
-          $embedURL = $this->proofAPIUtilities->convertYoutube($string);
+          $url = $response[$i]['attributes']['url'];
+          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
@@ -51,62 +51,77 @@ class ProofAPIController extends ControllerBase
       ),
     );
 
-    $page['#attached']['library'][] = 'proof_api/proof-api';
-
-      $response = new AjaxResponse($page);
-
-      $response->addCommand(new ReadMessageCommand($page));
-
-
-
+    $page['#attached']['library'][] = 'proof_api/proof-api.commands';
 
     return $page;
   }
 
   public function topTenByViews()
   {
-    $response = $this->proofAPIRequests->listTopTenByViews();
-    $json = json_decode($response, true);
-    $dataArray = $json['data'];
-    $viewTally = array();
-    foreach ($dataArray as $movie) {
-      $viewTally[] = $movie['attributes']['view_tally'];
-    };
-    array_multisort($viewTally, SORT_DESC, $dataArray);
-    $dataArray = array_slice($dataArray, 0, 10, true);
-    $page = array(
-      '#theme' => 'movies',
-      '#videos' => $dataArray,
-      '#redirectTo' => 'proof_api.top_ten_by_views',
-      '#cache' => array
-      (
-        'max-age' => 300,
-      ),
-    );
-    return $page;
+      $response = $this->proofAPIRequests->getAllVideos();
+      $viewTally = array();
+
+      foreach ($response as $video) {
+          $viewTally[] = $video['attributes']['view_tally'];
+      }
+
+      array_multisort($viewTally, SORT_DESC, $response);
+      $response = array_slice($response, 0, 10, true);
+
+
+      for ($i = 0; $i < count($response); $i++) {
+          $url = $response[$i]['attributes']['url'];
+          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+          $response[$i]['attributes']['embedURL'] = $embedURL;
+      };
+
+      $page[] = array(
+          '#theme' => 'videos',
+          '#videos' => $response,
+          '#redirectTo' => 'proof_api.top_ten_by_views',
+          '#cache' => array
+          (
+              'max-age' => 0,
+          ),
+      );
+
+      $page['#attached']['library'][] = 'proof_api/proof-api.commands';
+
+      return $page;
   }
 
   public function topTenByVotes()
   {
-    $response = $this->proofAPIRequests->listTopTenByVotes();
-    $json = json_decode($response, true);
-    $dataArray = $json['data'];
-    $voteTally = array();
-    foreach ($dataArray as $movie) {
-      $voteTally[] = $movie['attributes']['vote_tally'];
-    }
-    array_multisort($voteTally, SORT_DESC, $dataArray);
-    $dataArray = array_slice($dataArray, 0, 10, true);
-    $page = array(
-      '#theme' => 'movies',
-      '#videos' => $dataArray,
-      '#redirectTo' => 'proof_api.top_ten_by_votes',
-      '#cache' => array
-      (
-        'max-age' => 300,
-      ),
-    );
-    return $page;
+      $response = $this->proofAPIRequests->getAllVideos();
+      $voteTally = array();
+
+      foreach ($response as $video) {
+          $voteTally[] = $video['attributes']['vote_tally'];
+      }
+
+      array_multisort($voteTally, SORT_DESC, $response);
+      $response = array_slice($response, 0, 10, true);
+
+
+      for ($i = 0; $i < count($response); $i++) {
+          $url = $response[$i]['attributes']['url'];
+          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+          $response[$i]['attributes']['embedURL'] = $embedURL;
+      };
+
+      $page[] = array(
+          '#theme' => 'videos',
+          '#videos' => $response,
+          '#redirectTo' => 'proof_api.top_ten_by_votes',
+          '#cache' => array
+          (
+              'max-age' => 0,
+          ),
+      );
+
+      $page['#attached']['library'][] = 'proof_api/proof-api.commands';
+
+      return $page;
   }
 
   public function newVideo()
@@ -149,12 +164,13 @@ class ProofAPIController extends ControllerBase
       return new Response();
   }
 
-  public function readMessageCallback($method) {
-      $message = $this->allVideos();
+  public function buildIFramesCallback() {
 
+      $page = $this->allVideos();
       $response = new AjaxResponse();
+      $response->addCommand(new BuildIFramesCommand($page));
 
-      $response->addCommand(new ReadMessageCommand($message));
+      return $response;
   }
 
   public static function create(ContainerInterface $container)
