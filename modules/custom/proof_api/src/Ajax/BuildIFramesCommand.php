@@ -1,6 +1,14 @@
 <?php
 
-//adapted from mike-miles.com
+/**
+ * @file
+ * Contains \Drupal\proof_api\Ajax\BuildIFramesCommand.
+ *
+ *
+ * NOTE: This class is still in development - not currently being used
+ * adapted from mike-miles.com
+ * @todo complete work on this Ajax callback function route
+ */
 
 namespace Drupal\proof_api\Ajax;
 
@@ -10,13 +18,19 @@ class BuildIFramesCommand implements CommandInterface {
 
     protected $page;
 
-    //Constructs a BuildIFramesCommand object
-    public function __construct($page) {
+  /**
+   * BuildIFramesCommand constructor.
+   * @param $page
+   */
+  public function __construct($page) {
         $this->page = $page;
     }
 
-    //Implements Drupal\Core\Ajax\CommandInterface:render()
-    public function render() {
+  /**
+   * Implements Drupal\Core\Ajax\CommandInterface:render()
+   * @return array
+   */
+  public function render() {
         return array(
             'command' => 'buildIFrames',
             'content' => $this->page,

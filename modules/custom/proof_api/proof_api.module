@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Creates a schema for rendering content to the videos theme.
+ * @return array
+ */
 function videos_theme()
 {
   return array

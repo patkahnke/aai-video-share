@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\proof_api\Controller\ProofAPIController.
+ */
+
 namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
@@ -10,11 +15,20 @@ use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Returns responses for proof_api module routes.
+ */
 class ProofAPIController extends ControllerBase
 {
   private $proofAPIRequests;
   private $proofAPIUtilities;
 
+  /**
+   * ProofAPIController constructor.
+   * @param ProofAPIRequests $proofAPIRequests
+   * @param ProofAPIUtilities $proofAPIUtilities
+   * @todo Move as much of this logic as possible to ProofAPIUtilities
+   */
   public function __construct(ProofAPIRequests $proofAPIRequests, ProofAPIUtilities $proofAPIUtilities)
   {
     $this->proofAPIRequests = $proofAPIRequests;
@@ -22,6 +36,8 @@ class ProofAPIController extends ControllerBase
   }
 
   /**
+   * Sends request to get all videos through ProofAPIRequests
+   * Creates a render array to display all the videos, with most recent first
    * @return array
    */
   public function allVideos()
@@ -56,6 +72,12 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
+  /**
+   * Sends request to get all videos through ProofAPIRequests
+   * Creates a render array to display the top ten videos by views, with most viewed first
+   * @todo Move as much of this logic as possible to ProofAPIUtilities
+   * @return array
+   */
   public function topTenByViews()
   {
       $response = $this->proofAPIRequests->getAllVideos();
@@ -90,6 +112,12 @@ class ProofAPIController extends ControllerBase
       return $page;
   }
 
+  /**
+   * Sends request to get all videos through ProofAPIRequests
+   * Creates a render array to display the top ten videos by votes, with highest voted first
+   * @todo Move as much of this logic as possible to ProofAPIUtilities
+   * @return array
+   */
   public function topTenByVotes()
   {
       $response = $this->proofAPIRequests->getAllVideos();
@@ -124,6 +152,13 @@ class ProofAPIController extends ControllerBase
       return $page;
   }
 
+
+  /**
+   * Validates that video is being posted on a weekday
+   * If so, redirects to proof_api.new_video_form
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   * @todo refactor error response to a modal so user can stay on the same page
+   */
   public function newVideo()
   {
     if (date('N') < 6)
@@ -138,18 +173,41 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
+  /**
+   * Posts new Vote Up through the ProofAPIRequests service
+   * Redirects back to the page of origin
+   * @param $videoID
+   * @param $redirectTo
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
   public function voteUp($videoID, $redirectTo)
   {
     $this->proofAPIRequests->postNewVoteUp($videoID);
     return $this->redirect($redirectTo);
   }
 
+  /**
+   * Posts new Vote Down through the ProofAPIRequests service
+   * Redirects back to the page of origin
+   * @param $videoID
+   * @param $redirectTo
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
   public function voteDown($videoID, $redirectTo)
   {
     $this->proofAPIRequests->postNewVoteDown($videoID);
     return $this->redirect($redirectTo);
   }
 
+  /**
+   * Function is NOT used on embedded videos, only video links!
+   * Gets a specific video resource through the ProofAPIRequests service
+   * This causes a "view" resource to be created automatically
+   * Returns a Trusted Redirect Response to the video url
+   * @param $videoID
+   * @return TrustedRedirectResponse
+   * @todo solve the issue of how to create a new "view" resource on embedded videos that don't use this function
+   */
   public function viewVideo($videoID)
   {
     $response = $this->proofAPIRequests->getVideo($videoID);
@@ -158,12 +216,25 @@ class ProofAPIController extends ControllerBase
     return new TrustedRedirectResponse($url);
   }
 
+  /**
+   * COMING!! A function that will be called when an embedded video is played
+   * - possibly by subscribing to onPlayerStateChange() through the Youtube Player API
+   * Posts a new view resource related to a specific video through the ProofAPIRequests service
+   * @param $videoID
+   * @return Response
+   * @todo set up an event listener on iFrame through the Youtube Player API to create a call to this function
+   */
   public function newView($videoID)
   {
       $this->proofAPIRequests->postNewView($videoID);
       return new Response();
   }
 
+  /**
+   * COMING!! A callback function to generate markup using jQuery
+   * @return AjaxResponse
+   * @todo finish this path
+   */
   public function buildIFramesCallback() {
 
       $page = $this->allVideos();
@@ -173,6 +244,11 @@ class ProofAPIController extends ControllerBase
       return $response;
   }
 
+  /**
+   * Gets the ProofAPIRequests and ProofAPIUtilities services from the services container
+   * @param ContainerInterface $container
+   * @return static
+   */
   public static function create(ContainerInterface $container)
   {
     $proofAPIRequests = $container->get('proof_api.proof_api_requests');

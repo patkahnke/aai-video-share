@@ -5,7 +5,7 @@ Proof API module contains classes for consuming the Proof API and displaying the
  - Proof API Requests: A service for performing CRUD requests on the Proof API
  - Proof API Controller: A class responsible for making requests via the Proof API Requests service,
     and rendering the results
- - Proof API Utilities: A class with useful helper functions
+ - Proof API Utilities: A service with useful helper functions
  - New Video Form: A class for taking in new video data from the user, validating the data by several criteria,
     and posting it through the Proof API Requests service
  - BuildIFramesCommand: IN PROCESS! A class that will construct an object to link each video IFrame to the Youtube API,
@@ -24,6 +24,8 @@ Styling: Coming
 UX Overhaul: Coming
 Better page refreshes needed: For instance, when voting for a video, only the "vote tally" should be refreshed on the DOM
     - This will be part of the jQuery functionality once its added
+Better error responses needed in a couple cases, such as not creating a video on a weekend.
+    - Most likely approach will be to use a modal so the user can stay on the same page.
 
 Author/Maintainer
 ======================
