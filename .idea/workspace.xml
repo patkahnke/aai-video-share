@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9de8af7-bb02-4df6-b51a-7d20c417d44f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/README.txt" afterPath="$PROJECT_DIR$/modules/custom/proof_api/README.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/proof_api.module" afterPath="$PROJECT_DIR$/modules/custom/proof_api/proof_api.module" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/src/Ajax/BuildIFramesCommand.php" afterPath="$PROJECT_DIR$/modules/custom/proof_api/src/Ajax/BuildIFramesCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/src/Controller/ProofAPIController.php" afterPath="$PROJECT_DIR$/modules/custom/proof_api/src/Controller/ProofAPIController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIForms/NewVideoForm.php" afterPath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIForms/NewVideoForm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIRequests/ProofAPIRequests.php" afterPath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIRequests/ProofAPIRequests.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIUtilities/ProofAPIUtilities.php" afterPath="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIUtilities/ProofAPIUtilities.php" />
     </list>
     <ignored path="aai-video-share.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,7 +55,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BuildIFramesCommand.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BuildIFramesCommand.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/src/Ajax/BuildIFramesCommand.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="180">
@@ -74,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.txt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/README.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+            <state relative-caret-position="435">
+              <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -141,12 +134,12 @@
         <option value="$PROJECT_DIR$/themes/custom/videos/templates/page.html.twig" />
         <option value="$PROJECT_DIR$/README.txt" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/src/Controller/ProofAPIController.php" />
-        <option value="$PROJECT_DIR$/modules/custom/proof_api/README.txt" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIForms/NewVideoForm.php" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIUtilities/ProofAPIUtilities.php" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/src/ProofAPIRequests/ProofAPIRequests.php" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/proof_api.module" />
         <option value="$PROJECT_DIR$/modules/custom/proof_api/src/Ajax/BuildIFramesCommand.php" />
+        <option value="$PROJECT_DIR$/modules/custom/proof_api/README.txt" />
       </list>
     </option>
   </component>
@@ -560,12 +553,12 @@
       <updated>1473039550096</updated>
       <workItem from="1473039551301" duration="1690000" />
       <workItem from="1473042610679" duration="51705000" />
-      <workItem from="1473269221470" duration="11356000" />
+      <workItem from="1473269221470" duration="11664000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64751000" />
+    <option name="totallyTimeSpent" value="65059000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -589,7 +582,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17614424" sideWeight="0.49292627" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17614424" sideWeight="0.49292627" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -863,14 +856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/README.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/src/Controller/ProofAPIController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
@@ -928,6 +913,14 @@
           <folding>
             <element signature="e#7#247#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/README.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
