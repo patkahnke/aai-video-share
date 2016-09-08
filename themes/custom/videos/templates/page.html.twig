@@ -58,24 +58,11 @@
 
       {# Content #}
 
-        {#<div class="row, col-sm-8">#}
-            {#<a href="http://aai_challenge.dd:8083/new_video_form" class="use-ajax" data-accepts="application/vnd.drupal-modal">Add a Video!</a><br>#}
-        {#</div><br>#}
-
-
-        {#<div class="new-video-form, row, col-sm-12">#}
-        {#<a href="{{ proof_api.new_video}}"  class="use-ajax">Add a Video!</a><br>#}
-        {#<a href="http://aai_challenge.dd:8083/all_videos">All Videos</a><br>#}
-        {#<a href="http://aai_challenge.dd:8083/top_ten_by_views">Most Viewed Videos</a><br>#}
-        {#<a href="http://aai_challenge.dd:8083/top_ten_by_votes">Highest Voted Videos</a><br>#}
-        {#<div class="col-md-12"><span>- - -</span></div>#}
-        {#</div><br>#}
-
         {% for video in videos %}
             {#<div id="movies" class="row">#}
             {#</div>#}
-            {#<div class="col-sm-8">{{ link(video.attributes.title, 'http://aai-video-share.dd:8083/view_video/' ~ video.id ) }}</div>#}
-
+    {#@todo refactor to get rid of inline javascript
+       @todo refactor links to internal routes #}
             <div class="container, col-sm-12">
                 <div class="col-sm-12">
                     <span class="video-labels">Views: {{ video.attributes.view_tally }}</span>
@@ -84,51 +71,24 @@
                     <span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
                 </div>
                 <div class="col-sm-12" align="center">
-                    <iframe id="proof-api-videos"
+                    <iframe id="{{ video.id }}"
                             width="640" height="480"
                             src="https://{{ video.attributes.embedURL }}"
                             frameborder="0"
                             style="border: solid 4px #37474F"
+                            allowfullscreen="allowfullscreen"
                     ></iframe>
                 </div>
                 <div class="col-md-12"><span>- - -</span></div>
             </div>
 
             <script type="text/javascript">
-                var tag = document.createElement('script');
 
-                tag.src = 'https://www.youtube.com/iframe_api';
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-                var player;
-                function onYouTubeIframeAPIReady() {
-                    player = new YT.Player('player', {
-                        events: {
-                            'onStateChange': onPlayerStateChange
-                        }
-                    });
-                    console.log("onYouTube etc function is working");
-                }
-
-                var done = false;
-                function onPlayerStateChange(event) {
-                    if (event.data == 1 && !done) {
-                        setTimeout(stopVideo, 6000);
-                        done = true;
-                        console.log("onPlayerStateChange is firing")
-                    }
-                }
-
-                function stopVideo() {
-                    player.stopVideo();
-                }
-
-                {#//                var voted = false;#}
-                {#function onPlayerStateChange() {#}
+                {#var viewed{{ video.id }} = false;#}
+                {#function recordView() {#}
                 {#document.getElementById('http://aai-video-share.dd:8083/new_view/'{{ video.id }}).click();#}
                 {#document.getElementById('proof-api-videos').style.borderColor = '#DD2C00';#}
-                {#//                        voted = true;#}
+                    {#voted{{ video.id }} = true;#}
                 {#}#}
 
             </script>
