@@ -109,13 +109,6 @@
                     }
                 }
 
-                {#var viewed{{ video.id }} = false;#}
-                {#function recordView() {#}
-                {#document.getElementById('http://aai-video-share.dd:8083/new_view/'{{ video.id }}).click();#}
-                {#document.getElementById('proof-api-videos').style.borderColor = '#DD2C00';#}
-                    {#voted{{ video.id }} = true;#}
-                {#}#}
-
             </script>
         {% endfor %}
 
