@@ -35,10 +35,11 @@ class ProofAPIController extends ControllerBase
     $this->proofAPIUtilities = $proofAPIUtilities;
   }
 
+
   /**
    * Sends request to get all videos through ProofAPIRequests
    * Creates a render array to display all the videos, with most recent first
-   * @return array
+   * @return AjaxResponse|mixed
    */
   public function allVideos()
   {
@@ -57,7 +58,8 @@ class ProofAPIController extends ControllerBase
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
-    $page[] = array(
+
+    $page = array(
         '#theme' => 'videos',
         '#videos' => $response,
         '#redirectTo' => 'proof_api.all_videos',
@@ -68,6 +70,7 @@ class ProofAPIController extends ControllerBase
     );
 
     $page['#attached']['library'][] = 'proof_api/proof-api.commands';
+
 
     return $page;
   }
@@ -228,20 +231,6 @@ class ProofAPIController extends ControllerBase
   {
       $this->proofAPIRequests->postNewView($videoID);
       return new Response();
-  }
-
-  /**
-   * COMING!! A callback function to generate markup using jQuery
-   * @return AjaxResponse
-   * @todo finish this path
-   */
-  public function buildIFramesCallback() {
-
-      $page = $this->allVideos();
-      $response = new AjaxResponse();
-      $response->addCommand(new BuildIFramesCommand($page));
-
-      return $response;
   }
 
   /**

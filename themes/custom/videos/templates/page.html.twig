@@ -59,9 +59,10 @@
       {# Content #}
 
         {% for video in videos %}
-            {#<div id="movies" class="row">#}
-            {#</div>#}
+            {#<div id="movies" class="row">
+            </div>#}
     {#@todo refactor to get rid of inline javascript
+    @todo get iFrame listener working so a function can be triggered on "play" event to count a view
        @todo refactor links to internal routes #}
             <div class="container, col-sm-12">
                 <div class="col-sm-12">
@@ -83,15 +84,6 @@
             </div>
 
             <script type="text/javascript">
-                {#var video = {};#}
-                     {#video = {{ video }};#}
-                {#var videoID = video.id;#}
-               {#console.log('videoID:', videoID);#}
-
-//                var vidID =  videoID.substr(1, 5);
-//                console.log('vidID:', vidID);
-//                var player = {};
-//                console.log(player.vidID);
 
                 var tag = document.createElement('script');
 
@@ -113,7 +105,7 @@
                 function onPlayerStateChange(event) {
                     if (event.data == YT.PlayerState.PLAYING && !viewed) {
                         console.log('video is playing');
-                        viewed = true;
+//                        viewed = true;
                     }
                 }
 
