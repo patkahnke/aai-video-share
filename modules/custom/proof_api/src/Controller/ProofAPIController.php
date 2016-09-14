@@ -9,7 +9,7 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\proof_api\Ajax\BuildIFramesCommand;
+use Drupal\proof_api\Ajax\VoteUpCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,8 +69,9 @@ class ProofAPIController extends ControllerBase
       ),
     );
 
-    $page['#attached']['library'][] = 'proof_api/proof-api.commands';
-
+    $page['#attached']['library'][] = 'proof_api/videos';
+    $page['#attached']['drupalSettings']['videoArray'] = $response;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
 
     return $page;
   }
@@ -176,17 +177,14 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
-  /**
-   * Posts new Vote Up through the ProofAPIRequests service
-   * Redirects back to the page of origin
-   * @param $videoID
-   * @param $redirectTo
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   */
-  public function voteUp($videoID, $redirectTo)
+  public function voteUpOne($videoID, $voteTally)
   {
     $this->proofAPIRequests->postNewVoteUp($videoID);
-    return $this->redirect($redirectTo);
+    $voteTally++;
+    $response = new AjaxResponse($voteTally);
+    $response->addCommand(new VoteUpCommand($voteTally));
+
+    return $response;
   }
 
   /**
@@ -196,7 +194,7 @@ class ProofAPIController extends ControllerBase
    * @param $redirectTo
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
-  public function voteDown($videoID, $redirectTo)
+  public function voteDownOne($videoID, $redirectTo)
   {
     $this->proofAPIRequests->postNewVoteDown($videoID);
     return $this->redirect($redirectTo);

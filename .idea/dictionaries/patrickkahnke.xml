@@ -2,6 +2,9 @@
   <dictionary name="patrickkahnke">
     <words>
       <w>allowfullscreen</w>
+      <w>autoplay</w>
+      <w>frameborder</w>
+      <w>iframe</w>
       <w>kahnke</w>
     </words>
   </dictionary>

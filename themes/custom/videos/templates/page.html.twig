@@ -58,59 +58,73 @@
 
       {# Content #}
 
-        {% for video in videos %}
-            {#<div id="movies" class="row">
-            </div>#}
+        {#{% for video in videos %}#}
+
     {#@todo refactor to get rid of inline javascript
     @todo get iFrame listener working so a function can be triggered on "play" event to count a view
        @todo refactor links to internal routes #}
-            <div class="container, col-sm-12">
-                <div class="col-sm-12">
-                    <span class="video-labels">Views: {{ video.attributes.view_tally }}</span>
-                    <span class="video-labels">Votes: {{ video.attributes.vote_tally }}</span>
-                    <span class="video-labels">{{ link('+1', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
-                    <span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
-                </div>
+
+       {# <div class="container, col-sm-12">
+            <div class="col-sm-12">
+                <span class="video-labels">Views: {{ video.attributes.view_tally }}</span>
+                <span class="video-labels">Votes: {{ video.attributes.vote_tally }}</span>
+                <span class="video-labels">{{ link('+1', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+                <span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+            </div>#}
+        <div class="container, col-sm-12">
                 <div class="col-sm-12" align="center">
-                    <iframe id="player"
-                            width="640" height="480"
-                            src="https://{{ video.attributes.embedURL }}?enablejsapi=1"
-                            frameborder="0"
-                            style="border: solid 4px #37474F"
-                            allowfullscreen="allowfullscreen"
-                    ></iframe>
+                    <div id="video-container" class="row">
+                    </div>
                 </div>
-                <div class="col-md-12"><span>- - -</span></div>
-            </div>
+        </div>
 
-            <script type="text/javascript">
+                   {# <div class="container, col-sm-12">
+                        <div class="col-sm-12">
+                            <span class="video-labels">Views: {{ video.attributes.view_tally }}</span>
+                            <span class="video-labels">Votes: {{ video.attributes.vote_tally }}</span>
+                            <span class="video-labels">{{ link('+1', 'http://aai-video-share.dd:8083/vote_up/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+                            <span class="video-labels">{{ link('-1', 'http://aai-video-share.dd:8083/vote_down/' ~ video.id ~ '/' ~ redirectTo ) }}</span>
+                        </div>
+                        <div class="col-sm-12" align="center">
+                            <iframe id="player"
+                                    width="640" height="480"
+                                    src="https://{{ video.attributes.embedURL }}?enablejsapi=1"
+                                    frameborder="0"
+                                    style="border: solid 4px #37474F"
+                                    allowfullscreen="allowfullscreen"
+                            ></iframe>
+                        </div>
+                        <div class="col-md-12"><span>- - -</span></div>
+                    </div>
 
-                var tag = document.createElement('script');
+                    <script type="text/javascript">
 
-                tag.src = "https://www.youtube.com/iframe_api";
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                        var tag = document.createElement('script');
 
-                var player;
+                        tag.src = "https://www.youtube.com/iframe_api";
+                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-                function onYouTubeIframeAPIReady() {
-                   player = new YT.Player('player', {
-                        events: {
-                            'onStateChange': onPlayerStateChange
+                        var player;
+
+                        function onYouTubeIframeAPIReady() {
+                           player = new YT.Player('player', {
+                                events: {
+                                    'onStateChange': onPlayerStateChange
+                                }
+                            });
                         }
-                    });
-                }
 
-                var viewed = false;
-                function onPlayerStateChange(event) {
-                    if (event.data == YT.PlayerState.PLAYING && !viewed) {
-                        console.log('video is playing');
-//                        viewed = true;
-                    }
-                }
+                        var viewed = false;
+                        function onPlayerStateChange(event) {
+                            if (event.data == YT.PlayerState.PLAYING && !viewed) {
+                                console.log('video is playing');
+        //                        viewed = true;
+                            }
+                        }
 
-            </script>
-        {% endfor %}
+                    </script>
+                {% endfor %}#}
 
       {%
         set content_classes = [

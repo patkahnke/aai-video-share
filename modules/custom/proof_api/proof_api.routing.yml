@@ -41,17 +41,17 @@ proof_api.new_video_form:
     _permission: 'access content'
 
 proof_api.vote_up:
-  path: '/vote_up/{videoID}/{redirectTo}'
+  path: '/vote_up/ajax/{videoID}/{voteTally}'
   defaults:
-    _controller: '\Drupal\proof_api\Controller\ProofAPIController::voteUp'
+    _controller: '\Drupal\proof_api\Controller\ProofAPIController::voteUpOne'
     _title: "Vote Up"
   requirements:
     _permission: 'access content'
 
 proof_api.vote_down:
-  path: '/vote_down/{videoID}/{redirectTo}'
+  path: '/vote_down/ajax/{videoID}/{voteTally}'
   defaults:
-    _controller: '\Drupal\proof_api\Controller\ProofAPIController::voteDown'
+    _controller: '\Drupal\proof_api\Controller\ProofAPIController::voteDownOne'
     _title: "Vote Down"
   requirements:
     _permission: 'access content'
@@ -71,12 +71,3 @@ proof_api.new_view:
     _title: "Log a View"
   requirements:
     _permission: 'access content'
-
-#proof_api.build_iframes_callback:
-#  path: '/build_iframes_callback/{method}'
-#  defaults:
-#    _controller: '\Drupal\proof_api\Controller\ProofAPIController::buildIFramesCallback'
-#    _title: "Create an Ajax Response Object"
-#  requirements:
-#    _permission: 'access content'
-#    method: 'nojs|ajax'

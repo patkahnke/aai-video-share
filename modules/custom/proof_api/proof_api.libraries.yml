@@ -1,7 +1,12 @@
-proof-api.commands:
+videos:
   version: VERSION
+  css:
+    theme:
+      css/styles.css: {}
   js:
     js/commands.js: {}
   dependencies:
     - core/jquery
+    - core/drupal
+    - core/drupalSettings
     - core/drupal.ajax
