@@ -41,7 +41,7 @@ proof_api.new_video_form:
     _permission: 'access content'
 
 proof_api.vote_up:
-  path: '/vote_up/ajax/{videoID}/{voteTally}'
+  path: '/vote_up/ajax/{videoID}/{voteTally}/{votesID}'
   defaults:
     _controller: '\Drupal\proof_api\Controller\ProofAPIController::voteUpOne'
     _title: "Vote Up"

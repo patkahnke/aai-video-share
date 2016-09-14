@@ -69,7 +69,7 @@ class ProofAPIController extends ControllerBase
       ),
     );
 
-    $page['#attached']['library'][] = 'proof_api/videos';
+    $page['#attached']['library'][] = 'proof_api/proof-api';
     $page['#attached']['drupalSettings']['videoArray'] = $response;
     $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
 
@@ -111,7 +111,7 @@ class ProofAPIController extends ControllerBase
           ),
       );
 
-      $page['#attached']['library'][] = 'proof_api/proof-api.commands';
+      $page['#attached']['library'][] = 'proof_api/proof-api';
 
       return $page;
   }
@@ -151,7 +151,7 @@ class ProofAPIController extends ControllerBase
           ),
       );
 
-      $page['#attached']['library'][] = 'proof_api/proof-api.commands';
+      $page['#attached']['library'][] = 'proof_api/proof-api';
 
       return $page;
   }
@@ -177,12 +177,12 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
-  public function voteUpOne($videoID, $voteTally)
+  public function voteUpOne($videoID, $voteTally, $votesID)
   {
     $this->proofAPIRequests->postNewVoteUp($videoID);
     $voteTally++;
-    $response = new AjaxResponse($voteTally);
-    $response->addCommand(new VoteUpCommand($voteTally));
+    $response = new AjaxResponse();
+    $response->addCommand(new VoteUpCommand($voteTally, $votesID));
 
     return $response;
   }

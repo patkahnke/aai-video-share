@@ -13,15 +13,18 @@ use Drupal\Core\Ajax\CommandInterface;
 class VoteUpCommand implements CommandInterface
 {
   protected $voteTally;
+  protected $votesID;
 
-  public function __construct($voteTally) {
+  public function __construct($voteTally, $votesID) {
     $this->voteTally = $voteTally;
+    $this->votesID = $votesID;
   }
   public function render() {
 
     return array(
       'command' => 'voteUp',
       'voteTally' => $this->voteTally,
+      'votesID' => $this->votesID,
     );
   }
 }
