@@ -65,7 +65,7 @@ proof_api.view_video:
     _permission: 'access content'
 
 proof_api.new_view:
-  path: '/new_view/{videoID}'
+  path: '/new_view/ajax/{videoID}/{viewID}'
   defaults:
     _controller: '\Drupal\proof_api\Controller\ProofAPIController::newView'
     _title: "Log a View"

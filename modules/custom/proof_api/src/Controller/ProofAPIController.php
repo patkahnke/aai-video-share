@@ -9,6 +9,7 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\proof_api\Ajax\ViewCommand;
 use Drupal\proof_api\Ajax\VoteCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
@@ -229,18 +230,23 @@ class ProofAPIController extends ControllerBase
     return new TrustedRedirectResponse($url);
   }
 
-  /**
-   * COMING!! A function that will be called when an embedded video is played
-   * - possibly by subscribing to onPlayerStateChange() through the Youtube Player API
-   * Posts a new view resource related to a specific video through the ProofAPIRequests service
-   * @param $videoID
-   * @return Response
-   * @todo set up an event listener on iFrame through the Youtube Player API to create a call to this function
-   */
-  public function newView($videoID)
+  public function newView($videoID, $viewID)
   {
-      $this->proofAPIRequests->postNewView($videoID);
-      return new Response();
+    $this->proofAPIRequests->getVideo($videoID);
+    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $viewTally = null;
+
+    for ($i = 0; $i < count($newVideoData); $i++) {
+      if ($newVideoData[$i]['id'] === $videoID) {
+        $viewTally = $newVideoData[$i]['attributes']['view_tally'];
+      }
+    };
+
+    $response = new AjaxResponse();
+    $response->addCommand(new ViewCommand($viewTally, $viewID));
+
+    return $response;
+
   }
 
   /**

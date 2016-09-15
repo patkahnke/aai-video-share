@@ -8,7 +8,6 @@
 .overlay:before {
     content: '';
     position: absolute;
-    background: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     top: 0;
     right: 0;
