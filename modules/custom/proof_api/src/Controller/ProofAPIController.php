@@ -44,7 +44,6 @@ class ProofAPIController extends ControllerBase
    */
   public function allVideos()
   {
-    /** @var array $response */
     $response = $this->proofAPIRequests->getAllVideos();
       $createdAt = array();
 
@@ -60,8 +59,6 @@ class ProofAPIController extends ControllerBase
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
-
-    /** @var array $page */
     $page = array(
         '#theme' => 'videos',
         '#videos' => $response,
@@ -75,7 +72,7 @@ class ProofAPIController extends ControllerBase
     /**
      * attach js and css libraries
      * attach global variables for jQuery to reference when building the page
-     * @var array $page */
+     */
     $page['#attached']['library'][] = 'proof_api/proof-api';
     $page['#attached']['drupalSettings']['videoArray'] = $response;
     $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
@@ -122,7 +119,7 @@ class ProofAPIController extends ControllerBase
     /**
      * attach js and css libraries
      * attach global variables for jQuery to reference when building the page
-     * @var array $page */
+     */
     $page['#attached']['library'][] = 'proof_api/proof-api';
     $page['#attached']['drupalSettings']['videoArray'] = $response;
     $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
@@ -139,7 +136,6 @@ class ProofAPIController extends ControllerBase
    */
   public function topTenByVotes()
   {
-    /** @var array $response */
     $response = $this->proofAPIRequests->getAllVideos();
       $voteTally = array();
 
@@ -157,7 +153,6 @@ class ProofAPIController extends ControllerBase
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
-    /** @var array $page */
     $page[] = array(
           '#theme' => 'videos',
           '#videos' => $response,
@@ -171,7 +166,7 @@ class ProofAPIController extends ControllerBase
     /**
      * attach js and css libraries
      * attach global variables for jQuery to reference when building the page
-     * @var array $page */
+     */
     $page['#attached']['library'][] = 'proof_api/proof-api';
     $page['#attached']['drupalSettings']['videoArray'] = $response;
     $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
@@ -199,6 +194,16 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
+  /**
+   * Posts a new +1 vote on a specific video through the ProofAPIRequests service, then
+   * gets all videos through ProofAPIRequests and searches for the updated vote tally from the affected video
+   * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
+   * Proof API automatically creates a new "view" on that video, which would inflate the view count.
+   * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * @param $videoID
+   * @param $voteID
+   * @return AjaxResponse
+   */
   public function voteUpOne($videoID, $voteID)
   {
     $this->proofAPIRequests->postNewVoteUp($videoID);
@@ -217,6 +222,16 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
+  /**
+   * Posts a new -1 vote on a specific video through the ProofAPIRequests service, then
+   * gets all videos through ProofAPIRequests and searches for the updated vote tally from the affected video.
+   * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
+   * Proof API automatically creates a new "view" on that video, which would inflate the view count.
+   * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * @param $videoID
+   * @param $voteID
+   * @return AjaxResponse
+   */
   public function voteDownOne($videoID, $voteID)
   {
     $this->proofAPIRequests->postNewVoteDown($videoID);
@@ -250,6 +265,16 @@ class ProofAPIController extends ControllerBase
     return new TrustedRedirectResponse($url);
   }
 
+  /**
+   * Posts a new "view" resource on a specific video through the ProofAPIRequests service, then
+   * gets all videos through ProofAPIRequests and searches for the updated view tally from the affected video.
+   * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
+   * Proof API automatically creates a new "view" resource on that video, which would inflate the view count.
+   * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * @param $videoID
+   * @param $viewID
+   * @return AjaxResponse
+   */
   public function newView($videoID, $viewID)
   {
     $this->proofAPIRequests->postNewView($videoID);
@@ -266,7 +291,6 @@ class ProofAPIController extends ControllerBase
     $response->addCommand(new ViewCommand($viewTally, $viewID));
 
     return $response;
-
   }
 
   /**

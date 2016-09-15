@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\proof_api\Ajax\ViewCommand.
+ */
+
 namespace Drupal\proof_api\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;
