@@ -39,6 +39,7 @@ class ProofAPIController extends ControllerBase
   /**
    * Sends request to get all videos through ProofAPIRequests
    * Creates a render array to display all the videos, with most recent first
+   * Calls ProofAPIUtilities to convert urls to embeddable urls
    * @return AjaxResponse|mixed
    */
   public function allVideos()
@@ -85,6 +86,7 @@ class ProofAPIController extends ControllerBase
   /**
    * Sends request to get all videos through ProofAPIRequests
    * Creates a render array to display the top ten videos by views, with most viewed first
+   * Calls ProofAPIUtilities to convert urls to embeddable urls
    * @todo Move as much of this logic as possible to ProofAPIUtilities
    * @return array
    */
@@ -117,20 +119,28 @@ class ProofAPIController extends ControllerBase
           ),
       );
 
-      $page['#attached']['library'][] = 'proof_api/proof-api';
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     * @var array $page */
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+    $page['#attached']['drupalSettings']['videoArray'] = $response;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
 
-      return $page;
+    return $page;
   }
 
   /**
    * Sends request to get all videos through ProofAPIRequests
    * Creates a render array to display the top ten videos by votes, with highest voted first
+   * Calls ProofAPIUtilities to convert urls to embeddable urls
    * @todo Move as much of this logic as possible to ProofAPIUtilities
    * @return array
    */
   public function topTenByVotes()
   {
-      $response = $this->proofAPIRequests->getAllVideos();
+    /** @var array $response */
+    $response = $this->proofAPIRequests->getAllVideos();
       $voteTally = array();
 
       foreach ($response as $video) {
@@ -147,7 +157,8 @@ class ProofAPIController extends ControllerBase
           $response[$i]['attributes']['embedURL'] = $embedURL;
       };
 
-      $page[] = array(
+    /** @var array $page */
+    $page[] = array(
           '#theme' => 'videos',
           '#videos' => $response,
           '#redirectTo' => 'proof_api.top_ten_by_votes',
@@ -157,11 +168,16 @@ class ProofAPIController extends ControllerBase
           ),
       );
 
-      $page['#attached']['library'][] = 'proof_api/proof-api';
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     * @var array $page */
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+    $page['#attached']['drupalSettings']['videoArray'] = $response;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
 
-      return $page;
+    return $page;
   }
-
 
   /**
    * Validates that video is being posted on a weekday
