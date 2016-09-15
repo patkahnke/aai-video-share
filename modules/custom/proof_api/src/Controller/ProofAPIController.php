@@ -214,7 +214,6 @@ class ProofAPIController extends ControllerBase
   }
 
   /**
-   * Function is NOT used on embedded videos, only video links!
    * Gets a specific video resource through the ProofAPIRequests service
    * This causes a "view" resource to be created automatically
    * Returns a Trusted Redirect Response to the video url

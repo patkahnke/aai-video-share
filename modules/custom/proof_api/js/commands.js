@@ -23,11 +23,11 @@
                      var voteID = 'vote' + i;
                      var viewID = 'view' + i;
                      $('#video-container').append(
-                         '<table class="votes-views">' +
-                         '<td class="' + viewID + '">Views: ' + viewTally + '</td>' +
-                         '<td class="' + voteID + '">Votes: ' + voteTally + '</td>' +
-                         '<a class="btn use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
-                         '<td><a class= "btn use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
+                         '<table>' +
+                         '<td class="votes-views ' + viewID + '">Views: ' + viewTally + '</td>' +
+                         '<td class="votes-views ' + voteID + '">Votes: ' + voteTally + '</td>' +
+                         '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
+                         '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
                          '</table>' +
                          '<div class="overlay">' +
                          '<iframe id="player"' +

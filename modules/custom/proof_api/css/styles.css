@@ -1,6 +1,6 @@
 .overlay {
     position: relative;
-    margin: 0 auto;
+    margin: 0 auto 50px auto;
     padding: 20px;
     width: 660px;
 }
@@ -18,7 +18,36 @@
 
 .video-box {
     position: relative;
-    margin: 0 auto;
+    margin: 0 auto 50px auto;
     padding: 20px;
     width: 660px;
+}
+
+.vote-up-button {
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: small;
+    border-radius: 8px;
+}
+
+.vote-down-button {
+    background-color: darkred;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: small;
+    border-radius: 8px;
+}
+
+.votes-views {
+    margin: 50px 50px 0 50px;
+    width: 120px;
 }
