@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: patrickkahnke
- * Date: 9/13/16
- * Time: 3:16 PM
- */
 
 namespace Drupal\proof_api\Ajax;
 
@@ -15,10 +9,19 @@ class VoteCommand implements CommandInterface
   protected $voteTally;
   protected $voteID;
 
+  /**
+   * VoteCommand constructor.
+   * @param $voteTally
+   * @param $voteID
+   */
   public function __construct($voteTally, $voteID) {
     $this->voteTally = $voteTally;
     $this->voteID = $voteID;
   }
+
+  /**
+   * @return array
+   */
   public function render() {
 
     return array(

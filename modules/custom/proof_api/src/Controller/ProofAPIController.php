@@ -14,7 +14,6 @@ use Drupal\proof_api\Ajax\VoteCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Returns responses for proof_api module routes.
@@ -44,7 +43,8 @@ class ProofAPIController extends ControllerBase
    */
   public function allVideos()
   {
-      $response = $this->proofAPIRequests->getAllVideos();
+    /** @var array $response */
+    $response = $this->proofAPIRequests->getAllVideos();
       $createdAt = array();
 
     foreach ($response as $video) {
@@ -60,6 +60,7 @@ class ProofAPIController extends ControllerBase
       };
 
 
+    /** @var array $page */
     $page = array(
         '#theme' => 'videos',
         '#videos' => $response,
@@ -70,6 +71,10 @@ class ProofAPIController extends ControllerBase
       ),
     );
 
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     * @var array $page */
     $page['#attached']['library'][] = 'proof_api/proof-api';
     $page['#attached']['drupalSettings']['videoArray'] = $response;
     $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
@@ -220,7 +225,6 @@ class ProofAPIController extends ControllerBase
    * Returns a Trusted Redirect Response to the video url
    * @param $videoID
    * @return TrustedRedirectResponse
-   * @todo solve the issue of how to create a new "view" resource on embedded videos that don't use this function
    */
   public function viewVideo($videoID)
   {
@@ -232,7 +236,7 @@ class ProofAPIController extends ControllerBase
 
   public function newView($videoID, $viewID)
   {
-    $this->proofAPIRequests->getVideo($videoID);
+    $this->proofAPIRequests->postNewView($videoID);
     $newVideoData = $this->proofAPIRequests->getAllVideos();
     $viewTally = null;
 

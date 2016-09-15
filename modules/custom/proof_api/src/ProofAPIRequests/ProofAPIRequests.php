@@ -128,7 +128,7 @@ class ProofAPIRequests
    * Performs a post request for a new view resource related to a specific video resource from the Proof API.
    * @param $videoID
    */
- /* public function postNewView($videoID)
+  public function postNewView($videoID)
   {
     $ch = curl_init();
 
@@ -149,7 +149,7 @@ class ProofAPIRequests
 
     curl_exec($ch);
     curl_close($ch);
-  }*/
+  }
 
   /**
    * Performs a get request for a specific video resource from the Proof API.
