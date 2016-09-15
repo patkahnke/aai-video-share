@@ -2,33 +2,32 @@
 
      'use strict';
 
-     Drupal.AjaxCommands.prototype.voteUp = function(ajax, response, status) {
+     Drupal.AjaxCommands.prototype.vote = function(ajax, response, status) {
          var voteTally = response.voteTally;
-         var votesID = response.votesID;
-         $('.' + votesID + '').text('Votes: ' + voteTally);
-         console.log('voteUp is firing');
-         console.log('votesID:', votesID);
+         var voteID = response.voteID;
+         $('.' + voteID + '').text('Votes: ' + voteTally);
+         console.log('vote is firing');
+         console.log('voteID:', voteID);
      };
 
      Drupal.behaviors.proofAPI = {
          attach: function (context, settings) {
              $('#video-container').once('proofAPIModifyDom').each(function () {
                  var videos = settings.videoArray;
-                 var redirect = settings.redirectTo;
                  console.log('response:', videos);
-                 console.log('redirect:', redirect);
 
                  for (var i = 0; i < videos.length; i++) {
                      var viewTally = videos[i].attributes.view_tally;
                      var voteTally = videos[i].attributes.vote_tally;
                      var videoID = videos[i].id;
-                     var votesID = 'votes' + i;
+                     var voteID = 'vote' + i;
+                     var viewID = 'view' + i;
                      $('#video-container').append(
                          '<table class="votes-views">' +
-                         '<td>Views: ' + viewTally + '</td>' +
-                         '<td class="' + votesID + '">Votes: ' + voteTally + '</td>' +
-                         '<a class="btn use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteTally + '/' + votesID + '">Ajax Test</a>' +
-                         '<td><a class= "vote-down use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteTally + '">Vote Down</a><td>' +
+                         '<td class="' + viewID + '">Views: ' + viewTally + '</td>' +
+                         '<td class="' + voteID + '">Votes: ' + voteTally + '</td>' +
+                         '<a class="btn use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
+                         '<td><a class= "btn use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
                          '</table>' +
                          '<div class="overlay">' +
                          '<iframe id="player"' +

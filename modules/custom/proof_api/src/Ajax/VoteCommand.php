@@ -10,21 +10,21 @@ namespace Drupal\proof_api\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;
 
-class VoteUpCommand implements CommandInterface
+class VoteCommand implements CommandInterface
 {
   protected $voteTally;
-  protected $votesID;
+  protected $voteID;
 
-  public function __construct($voteTally, $votesID) {
+  public function __construct($voteTally, $voteID) {
     $this->voteTally = $voteTally;
-    $this->votesID = $votesID;
+    $this->voteID = $voteID;
   }
   public function render() {
 
     return array(
-      'command' => 'voteUp',
+      'command' => 'vote',
       'voteTally' => $this->voteTally,
-      'votesID' => $this->votesID,
+      'voteID' => $this->voteID,
     );
   }
 }

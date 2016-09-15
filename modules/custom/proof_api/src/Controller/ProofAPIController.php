@@ -9,7 +9,7 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\proof_api\Ajax\VoteUpCommand;
+use Drupal\proof_api\Ajax\VoteCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -177,27 +177,40 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
-  public function voteUpOne($videoID, $voteTally, $votesID)
+  public function voteUpOne($videoID, $voteID)
   {
     $this->proofAPIRequests->postNewVoteUp($videoID);
-    $voteTally++;
+    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $voteTally = null;
+
+    for ($i = 0; $i < count($newVideoData); $i++) {
+      if ($newVideoData[$i]['id'] === $videoID) {
+        $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+      }
+    };
+
     $response = new AjaxResponse();
-    $response->addCommand(new VoteUpCommand($voteTally, $votesID));
+    $response->addCommand(new VoteCommand($voteTally, $voteID));
 
     return $response;
   }
 
-  /**
-   * Posts new Vote Down through the ProofAPIRequests service
-   * Redirects back to the page of origin
-   * @param $videoID
-   * @param $redirectTo
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   */
-  public function voteDownOne($videoID, $redirectTo)
+  public function voteDownOne($videoID, $voteID)
   {
     $this->proofAPIRequests->postNewVoteDown($videoID);
-    return $this->redirect($redirectTo);
+    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $voteTally = null;
+
+    for ($i = 0; $i < count($newVideoData); $i++) {
+      if ($newVideoData[$i]['id'] === $videoID) {
+        $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+      }
+    };
+
+    $response = new AjaxResponse();
+    $response->addCommand(new VoteCommand($voteTally, $voteID));
+
+    return $response;
   }
 
   /**
