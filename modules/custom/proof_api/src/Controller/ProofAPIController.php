@@ -7,6 +7,7 @@
 
 namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\proof_api\Ajax\ViewCommand;
@@ -178,20 +179,22 @@ class ProofAPIController extends ControllerBase
    * Validates that video is being posted on a weekday
    * If so, redirects to proof_api.new_video_form
    * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
-   * @todo refactor error response to a modal so user can stay on the same page
    */
   public function newVideo()
   {
-    if (date('N') < 6)
-    {
-      return $this->redirect('proof_api.new_video_form');
+    $response = new AjaxResponse();
+
+    if (date('N') < 6) {
+      $response = $this->redirect('proof_api.new_video_form');
+
     } else {
-      $page = array(
-        '#theme' => 'bootstrap_modal',
-        '#body' => 'Sorry - You can only post a new video on weekdays.'
+      $title = 'Sorry - you cannot add a video on weekends.';
+      $content = array(
+        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
       );
+        $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
-    return $page;
+      return $response;
   }
 
   /**
@@ -200,7 +203,6 @@ class ProofAPIController extends ControllerBase
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
    * Proof API automatically creates a new "view" on that video, which would inflate the view count.
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
-   * @todo Return the "already voted" response in a modal
    * @param $videoID
    * @param $voteID
    * @return AjaxResponse
@@ -217,17 +219,12 @@ class ProofAPIController extends ControllerBase
     $response = new AjaxResponse();
 
     if ($voteCheck === $today) {
-      echo ("Sorry - you already voted on this video today.");
-      $newVideoData = $this->proofAPIRequests->getAllVideos();
-
-      for ($i = 0; $i < count($newVideoData); $i++) {
-        if ($newVideoData[$i]['id'] === $videoID) {
-          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
-        }
-        $response = t('Sorry, you have already voted on this video today.');
-      };
-
-    } else {
+        $title = 'Sorry - you have already voted on this video today';
+        $content = array (
+          '#attached' => ['library' => ['core/drupal.dialog.ajax']],
+        );
+        $response->addCommand(new OpenModalDialogCommand($title, $content));
+      } else {
 
       $this->proofAPIRequests->postNewVoteUp($videoID);
       $newVideoData = $this->proofAPIRequests->getAllVideos();
@@ -242,6 +239,7 @@ class ProofAPIController extends ControllerBase
       $response->addCommand(new VoteCommand($voteTally, $voteID));
 
     };
+
     return $response;
   }
 
@@ -252,7 +250,6 @@ class ProofAPIController extends ControllerBase
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
    * Proof API automatically creates a new "view" on that video, which would inflate the view count.
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
-   * @todo Return the "already voted" response in a modal
    * @param $videoID
    * @param $voteID
    * @return AjaxResponse
@@ -266,16 +263,14 @@ class ProofAPIController extends ControllerBase
     $voteCheckID = $videoID . $userID;
     $voteCheck = $keyValueStore->get($voteCheckID);
     $voteTally = null;
+    $response = new AjaxResponse();
 
     if ($voteCheck === $today) {
-      echo ("Sorry - you already voted on this video today.");
-      $newVideoData = $this->proofAPIRequests->getAllVideos();
-
-      for ($i = 0; $i < count($newVideoData); $i++) {
-        if ($newVideoData[$i]['id'] === $videoID) {
-          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
-        }
-      };
+      $title = 'Sorry - you have already voted on this video today';
+      $content = array (
+        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
+      );
+      $response->addCommand(new OpenModalDialogCommand($title, $content));
 
     } else {
 
@@ -289,10 +284,8 @@ class ProofAPIController extends ControllerBase
       };
 
       $keyValueStore->set($voteCheckID, $today);
+      $response->addCommand(new VoteCommand($voteTally, $voteID));
     };
-
-    $response = new AjaxResponse();
-    $response->addCommand(new VoteCommand($voteTally, $voteID));
 
     return $response;
   }

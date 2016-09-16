@@ -7,6 +7,8 @@ proof-api:
     js/commands.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.ui
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
+    - core/drupal.dialog

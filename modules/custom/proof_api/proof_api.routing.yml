@@ -25,7 +25,7 @@ proof_api.top_ten_by_votes:
     _permission: 'access content'
 
 proof_api.new_video:
-  path: '/new_video'
+  path: '/new_video/ajax'
   defaults:
     _controller: '\Drupal\proof_api\Controller\ProofAPIController::newVideo'
     _title: "Post New Video"
