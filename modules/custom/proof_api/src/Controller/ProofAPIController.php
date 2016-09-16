@@ -200,48 +200,95 @@ class ProofAPIController extends ControllerBase
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
    * Proof API automatically creates a new "view" on that video, which would inflate the view count.
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * @todo Return the "already voted" response in a modal
    * @param $videoID
    * @param $voteID
    * @return AjaxResponse
    */
   public function voteUpOne($videoID, $voteID)
   {
-    $this->proofAPIRequests->postNewVoteUp($videoID);
-    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $user = \Drupal::currentUser();
+    $keyValueStore = $this->keyValue('proof_api');
+    $today = date('Ymd');
+    $userID = $user->id();
+    $voteCheckID = $videoID . $userID;
+    $voteCheck = $keyValueStore->get($voteCheckID);
     $voteTally = null;
-
-    for ($i = 0; $i < count($newVideoData); $i++) {
-      if ($newVideoData[$i]['id'] === $videoID) {
-        $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
-      }
-    };
-
     $response = new AjaxResponse();
-    $response->addCommand(new VoteCommand($voteTally, $voteID));
 
+    if ($voteCheck === $today) {
+      echo ("Sorry - you already voted on this video today.");
+      $newVideoData = $this->proofAPIRequests->getAllVideos();
+
+      for ($i = 0; $i < count($newVideoData); $i++) {
+        if ($newVideoData[$i]['id'] === $videoID) {
+          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+        }
+        $response = t('Sorry, you have already voted on this video today.');
+      };
+
+    } else {
+
+      $this->proofAPIRequests->postNewVoteUp($videoID);
+      $newVideoData = $this->proofAPIRequests->getAllVideos();
+
+      for ($i = 0; $i < count($newVideoData); $i++) {
+        if ($newVideoData[$i]['id'] === $videoID) {
+          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+        }
+      };
+
+      $keyValueStore->set($voteCheckID, $today);
+      $response->addCommand(new VoteCommand($voteTally, $voteID));
+
+    };
     return $response;
   }
 
   /**
+   * Verifies that the user has not voted on a video yet today.
    * Posts a new -1 vote on a specific video through the ProofAPIRequests service, then
    * gets all videos through ProofAPIRequests and searches for the updated vote tally from the affected video.
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
    * Proof API automatically creates a new "view" on that video, which would inflate the view count.
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * @todo Return the "already voted" response in a modal
    * @param $videoID
    * @param $voteID
    * @return AjaxResponse
    */
   public function voteDownOne($videoID, $voteID)
   {
-    $this->proofAPIRequests->postNewVoteDown($videoID);
-    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $user = \Drupal::currentUser();
+    $keyValueStore = $this->keyValue('proof_api');
+    $today = date('Ymd');
+    $userID = $user->id();
+    $voteCheckID = $videoID . $userID;
+    $voteCheck = $keyValueStore->get($voteCheckID);
     $voteTally = null;
 
-    for ($i = 0; $i < count($newVideoData); $i++) {
-      if ($newVideoData[$i]['id'] === $videoID) {
-        $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
-      }
+    if ($voteCheck === $today) {
+      echo ("Sorry - you already voted on this video today.");
+      $newVideoData = $this->proofAPIRequests->getAllVideos();
+
+      for ($i = 0; $i < count($newVideoData); $i++) {
+        if ($newVideoData[$i]['id'] === $videoID) {
+          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+        }
+      };
+
+    } else {
+
+      $this->proofAPIRequests->postNewVoteDown($videoID);
+      $newVideoData = $this->proofAPIRequests->getAllVideos();
+
+      for ($i = 0; $i < count($newVideoData); $i++) {
+        if ($newVideoData[$i]['id'] === $videoID) {
+          $voteTally = $newVideoData[$i]['attributes']['vote_tally'];
+        }
+      };
+
+      $keyValueStore->set($voteCheckID, $today);
     };
 
     $response = new AjaxResponse();

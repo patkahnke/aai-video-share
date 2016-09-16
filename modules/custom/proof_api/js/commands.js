@@ -11,8 +11,6 @@
          var viewTally = response.viewTally;
          var viewID = response.viewID;
          $('.' + viewID + '').text('Views: ' + viewTally);
-         console.log('view is firing');
-         console.log('viewID:', viewID);
      };
 
      /*
@@ -24,8 +22,6 @@
          var voteTally = response.voteTally;
          var voteID = response.voteID;
          $('.' + voteID + '').text('Votes: ' + voteTally);
-         console.log('vote is firing');
-         console.log('voteID:', voteID);
      };
 
      /*
