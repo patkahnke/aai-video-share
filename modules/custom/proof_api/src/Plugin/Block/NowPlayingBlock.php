@@ -59,7 +59,7 @@ class NowPlayingBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
     $response = array_slice($response, 0, 1, true);
 
-    $title = 'Now Playing';
+    $title = 'Now Playing - ' . $response[0]['attributes']['title'];
 
     $build = array(
       '#videos' => $response,
