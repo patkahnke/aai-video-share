@@ -6,16 +6,29 @@
  */
 function videos_theme()
 {
-  return array
-  (
-    'videos' => array
-    (
-      'variables' => array
-      (
+  return array(
+    'videos' => array(
+      'variables' => array(
           'videos' => null,
           'redirectTo' => null,
       ),
       'template' => 'page',
+      ),
+
+    'top_ten_block' => array(
+      'variables' => array(
+        'videos' => null,
+        'title' => null,
+      ),
+      'template' => 'top-ten-block',
+    ),
+
+    'now_playing' => array(
+      'variables' => array(
+        'embed_url' => null,
+        'title' => null,
+      ),
+      'template' => 'now-playing',
     ),
   );
 }

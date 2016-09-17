@@ -189,9 +189,8 @@ class ProofAPIController extends ControllerBase
 
     } else {
       $title = 'Sorry - you cannot add a video on weekends.';
-      $content = array(
-        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
-      );
+      $content = array();
+      $content['#attached']['library'][] = 'core/drupal.dialog.ajax';
         $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
       return $response;
