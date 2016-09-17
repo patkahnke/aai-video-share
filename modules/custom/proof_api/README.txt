@@ -12,14 +12,8 @@ Proof API module contains classes for consuming the Proof API and displaying the
 
 KNOWN ISSUES (IN PROCESS):
 ======================
-Need to limit votes to one per video per day per employee: Coming
-    - In order to maintain persistence of a record of the vote, a table will be created in the Drupal database
-        and accessed on each vote
+Front page top ten links still need to be hooked up to play internally and count the views.
 Deployment: Coming
-Styling: Coming
-UX Overhaul: Coming
-Better error responses needed in a couple cases, such as when a user tries to create a video on a weekend.
-    - Most likely approach will be to use a modal so the user can stay on the same page.
 
 Author/Maintainer
 ======================
@@ -32,4 +26,4 @@ September 7, 2016
 
 README Updated On:
 ======================
-September 15, 2016
+September 16, 2016
