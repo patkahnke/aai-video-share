@@ -71,3 +71,11 @@ proof_api.new_view:
     _title: "Log a View"
   requirements:
     _permission: 'access content'
+
+proof_api.home:
+  path: '/now_playing'
+  defaults:
+    _controller: '\Drupal\proof_api\Controller\ProofAPIController::nowPlaying'
+    _title: "Welcome to AAI VideoShare"
+  requirements:
+    _permission: 'access content'

@@ -16,6 +16,10 @@
   {% block content %}
     {{ content }}
     <h3> {{ title }} </h3>
+    <div class="col-sm-12" align="center">
+      <div id="video-container" class="row">
+      </div>
+    </div>
   {% for video in videos %}
 
     <div class="col-sm-12 video-links">{{ loop.index }}) {{ link(video.attributes.title, 'http://aai-video-share.dd:8083/view_video/' ~ video.id ) }}</div>

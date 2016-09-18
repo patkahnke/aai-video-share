@@ -45,7 +45,7 @@
                      var videoID = videos[i].id;
                      var voteID = 'vote' + i;
                      var viewID = 'view' + i;
-
+console.log(videos[i].attributes.embedURL);
                      /*
                      "Overlay" is a solution for counting views on embedded videos. A transparent overlay is placed on the iFrame.
                      On a click event on the overlay:

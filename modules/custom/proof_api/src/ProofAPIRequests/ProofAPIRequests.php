@@ -172,6 +172,9 @@ class ProofAPIRequests
     $response = curl_exec($ch);
     curl_close($ch);
 
+    $json = json_decode($response, true);
+    $response = $json['data'];
+
     return $response;
   }
 }

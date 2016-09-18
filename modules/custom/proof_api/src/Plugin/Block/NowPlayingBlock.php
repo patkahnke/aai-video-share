@@ -28,6 +28,7 @@ class NowPlayingBlock extends BlockBase implements ContainerFactoryPluginInterfa
   private $proofAPIRequests;
   private $proofAPIUtilities;
 
+
   public function __construct(array $configuration, $plugin_id, $plugin_definition,
                               ProofAPIRequests $proofAPIRequests,
                               ProofAPIUtilities $proofAPIUtilities)
@@ -35,6 +36,26 @@ class NowPlayingBlock extends BlockBase implements ContainerFactoryPluginInterfa
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->proofAPIRequests = $proofAPIRequests;
     $this->proofAPIUtilities = $proofAPIUtilities;
+  }
+
+  public function setStartUpVideo()
+  {
+    $response = $this->proofAPIRequests->getAllVideos();
+    $createdAt = array();
+
+    foreach ($response as $video) {
+      $createdAt[] = $video['attributes']['created_at'];
+    }
+
+    array_multisort($createdAt, SORT_DESC, $response);
+
+    for ($i = 0; $i < count($response); $i++) {
+      $url = $response[$i]['attributes']['url'];
+      $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+      $response[$i]['attributes']['embedURL'] = $embedURL;
+    };
+
+    $response = array_slice($response, 0, 1, true);
   }
 
   /**

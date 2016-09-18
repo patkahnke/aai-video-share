@@ -9,7 +9,6 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\proof_api\Ajax\ViewCommand;
 use Drupal\proof_api\Ajax\VoteCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
@@ -36,6 +35,68 @@ class ProofAPIController extends ControllerBase
     $this->proofAPIUtilities = $proofAPIUtilities;
   }
 
+  public function nowPlaying()
+  {
+    $keyValueStore = $this->keyValue('proof_api');
+
+    $currentVideoID = $keyValueStore->get('currentVideoID');
+    $requestedVideoID = $keyValueStore->get('requestedVideoID');
+
+    if ($currentVideoID === $requestedVideoID) {
+
+      $allVideos = $this->proofAPIRequests->getAllVideos();
+      $createdAt = array();
+
+      foreach ($allVideos as $video) {
+        $createdAt[] = $video['attributes']['created_at'];
+      }
+
+      array_multisort($createdAt, SORT_DESC, $allVideos);
+
+      for ($i = 0; $i < count($allVideos); $i++) {
+        $url = $allVideos[$i]['attributes']['url'];
+        $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+        $allVideos[$i]['attributes']['embedURL'] = $embedURL;
+      };
+
+      $user = \Drupal::currentUser();
+      $userID = $user->id();
+      $currentVideo = array_slice($allVideos, 0, 1, true);
+      $currentVideoID = $currentVideo[0]['id'] . $userID;
+      $keyValueStore->set('currentVideo', $currentVideo);
+      $keyValueStore->set('requestedVideo', $currentVideo);
+      $keyValueStore->set('currentVideoID', $currentVideoID);
+      $keyValueStore->set('requestedVideoID', $currentVideoID);
+      $response = $currentVideo;
+
+    } else {
+
+      $requestedVideo = $keyValueStore->get('requestedVideo');
+      $currentVideo = $keyValueStore->get('currentVideo');
+      $currentVideoID = $keyValueStore->get('currentVideoID');
+      $keyValueStore->set('requestedVideo', $currentVideo);
+      $keyValueStore->set('requestedVideoID', $currentVideoID);
+      $response = $requestedVideo;
+    }
+
+    $title = 'Now Playing - ' . $response[0]['attributes']['title'];
+
+    $page = array(
+      '#videos' => $response,
+      '#title' => $title,
+      '#theme' => 'videos',
+    );
+
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     */
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+    $page['#attached']['drupalSettings']['videoArray'] = $response;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.home';
+
+    return $page;
+  }
 
   /**
    * Sends request to get all videos through ProofAPIRequests
@@ -191,7 +252,7 @@ class ProofAPIController extends ControllerBase
       $title = 'Sorry - you cannot add a video on weekends.';
       $content = array();
       $content['#attached']['library'][] = 'core/drupal.dialog.ajax';
-        $response->addCommand(new OpenModalDialogCommand($title, $content));
+      $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
       return $response;
   }
@@ -289,19 +350,22 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
-  /**
-   * Gets a specific video resource through the ProofAPIRequests service
-   * This causes a "view" resource to be created automatically
-   * Returns a Trusted Redirect Response to the video url
-   * @param $videoID
-   * @return TrustedRedirectResponse
-   */
+//@todo get the addition of autoplay wired up correctly so the videos aren't double-counted
   public function viewVideo($videoID)
   {
-    $response = $this->proofAPIRequests->getVideo($videoID);
-    $json = json_decode($response, true);
-    $url = $json['data']['attributes']['url'];
-    return new TrustedRedirectResponse($url);
+    $keyValueStore = $this->keyValue('proof_api');
+    $response = array();
+    $response[0] = $this->proofAPIRequests->getVideo($videoID);
+    $url = $response[0]['attributes']['url'];
+    $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+//    $autoplay = '&autoplay=1';
+    $response[0]['attributes']['embedURL'] = $embedURL;
+    $user = \Drupal::currentUser();
+    $userID = $user->id();
+    $responseID = $videoID . $userID;
+    $keyValueStore->set('requestedVideo', $response);
+    $keyValueStore->set('requestedVideoID', $responseID);
+    return $this->redirect('proof_api.home');
   }
 
   /**
