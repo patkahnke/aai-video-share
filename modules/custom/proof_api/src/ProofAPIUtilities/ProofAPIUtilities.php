@@ -120,6 +120,9 @@ class ProofAPIUtilities {
             $embedURL = $this->convertVimeo($url);
         }
 
+        $urlAttributes = '?frameborder="0"style="border: solid 4px #37474F"allowfullscreen="allowfullscreen"';
+        $embedURL = $embedURL . $urlAttributes;
+
         return $embedURL;
     }
 }

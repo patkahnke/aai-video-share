@@ -57,6 +57,7 @@ class ProofAPIController extends ControllerBase
         $url = $allVideos[$i]['attributes']['url'];
         $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
         $allVideos[$i]['attributes']['embedURL'] = $embedURL;
+        $allVideos[$i]['attributes']['overlay'] = 'overlay';
       };
 
       $user = \Drupal::currentUser();
@@ -70,8 +71,12 @@ class ProofAPIController extends ControllerBase
       $response = $currentVideo;
 
     } else {
-
+      $autoplay = '&autoplay=1';
       $requestedVideo = $keyValueStore->get('requestedVideo');
+      $url = $requestedVideo[0]['attributes']['url'];
+      $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
+      $requestedVideo[0]['attributes']['embedURL'] = $embedURL . $autoplay;
+      $requestedVideo[0]['attributes']['overlay'] = 'video-box';
       $currentVideo = $keyValueStore->get('currentVideo');
       $currentVideoID = $keyValueStore->get('currentVideoID');
       $keyValueStore->set('requestedVideo', $currentVideo);
@@ -119,6 +124,7 @@ class ProofAPIController extends ControllerBase
           $url = $response[$i]['attributes']['url'];
           $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
           $response[$i]['attributes']['embedURL'] = $embedURL;
+          $response[$i]['attributes']['overlay'] = 'overlay';
       };
 
     $page = array(
@@ -166,6 +172,7 @@ class ProofAPIController extends ControllerBase
           $url = $response[$i]['attributes']['url'];
           $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
           $response[$i]['attributes']['embedURL'] = $embedURL;
+          $response[$i]['attributes']['overlay'] = 'overlay';
       };
 
       $page[] = array(
@@ -213,6 +220,7 @@ class ProofAPIController extends ControllerBase
           $url = $response[$i]['attributes']['url'];
           $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
           $response[$i]['attributes']['embedURL'] = $embedURL;
+          $response[$i]['attributes']['overlay'] = 'overlay';
       };
 
     $page[] = array(
@@ -249,9 +257,10 @@ class ProofAPIController extends ControllerBase
       $response = $this->redirect('proof_api.new_video_form');
 
     } else {
-      $title = 'Sorry - you cannot add a video on weekends.';
-      $content = array();
-      $content['#attached']['library'][] = 'core/drupal.dialog.ajax';
+      $title = 'Sorry - you cannot add a video on a weekend.';
+      $content = array (
+        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
+      );
       $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
       return $response;
@@ -350,7 +359,7 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
-//@todo get the addition of autoplay wired up correctly so the videos aren't double-counted
+
   public function viewVideo($videoID)
   {
     $keyValueStore = $this->keyValue('proof_api');
@@ -358,7 +367,6 @@ class ProofAPIController extends ControllerBase
     $response[0] = $this->proofAPIRequests->getVideo($videoID);
     $url = $response[0]['attributes']['url'];
     $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-//    $autoplay = '&autoplay=1';
     $response[0]['attributes']['embedURL'] = $embedURL;
     $user = \Drupal::currentUser();
     $userID = $user->id();

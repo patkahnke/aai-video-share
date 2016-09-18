@@ -45,7 +45,8 @@
                      var videoID = videos[i].id;
                      var voteID = 'vote' + i;
                      var viewID = 'view' + i;
-console.log(videos[i].attributes.embedURL);
+                     var overlay = videos[i].attributes.overlay;
+                         console.log(videos[i].attributes.embedURL);
                      /*
                      "Overlay" is a solution for counting views on embedded videos. A transparent overlay is placed on the iFrame.
                      On a click event on the overlay:
@@ -61,14 +62,12 @@ console.log(videos[i].attributes.embedURL);
                          '<td class="votes-views ' + voteID + '">Votes: ' + voteTally + '</td>' +
                          '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
                          '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
+                         '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
                          '</table>' +
-                         '<div class="overlay">' +
+                         '<div class="' + overlay + '">' +
                          '<iframe id="player"' +
                          'width="640" height="480"' +
                          'src="https://' + videos[i].attributes.embedURL +
-                         '?frameborder="0"' +
-                         'style="border: solid 4px #37474F"' +
-                         'allowfullscreen="allowfullscreen"' +
                          '></iframe>' +
                          '</div>' +
                          '</div>');

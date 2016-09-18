@@ -45,6 +45,18 @@
     border-radius: 8px;
 }
 
+.add-video-button {
+    background-color: darkblue;
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: small;
+    border-radius: 8px;
+}
+
 .votes-views {
     margin: 50px 50px 0 50px;
     width: 120px;
