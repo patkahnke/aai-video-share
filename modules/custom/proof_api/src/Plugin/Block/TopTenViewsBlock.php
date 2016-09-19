@@ -10,6 +10,7 @@ namespace Drupal\proof_api\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
+use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,11 +25,15 @@ class TopTenViewsBlock extends BlockBase implements ContainerFactoryPluginInterf
 {
 
   private $proofAPIRequests;
+  private $proofAPIUtilities;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProofAPIRequests $proofAPIRequests)
+  public function __construct(array $configuration, $plugin_id, $plugin_definition,
+                              ProofAPIRequests $proofAPIRequests,
+                              ProofAPIUtilities $proofAPIUtilities)
   {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->proofAPIRequests = $proofAPIRequests;
+    $this->proofAPIUtilities = $proofAPIUtilities;
   }
 
   /**
@@ -36,33 +41,23 @@ class TopTenViewsBlock extends BlockBase implements ContainerFactoryPluginInterf
    */
   public function build()
   {
-    $response = $this->proofAPIRequests->getAllVideos();
-    $viewTally = array();
+    $videos = $this->proofAPIRequests->getAllVideos();
+    $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'view_tally', 'overlay', 10);
+    $build = $this->proofAPIUtilities->buildVideoListBlockPage($videos, 'Most Viewed Videos');
 
-    foreach ($response as $video) {
-      $viewTally[] = $video['attributes']['view_tally'];
-    }
-
-    array_multisort($viewTally, SORT_DESC, $response);
-    $response = array_slice($response, 0, 10, true);
-    $title = 'Most Viewed Videos';
-
-    return array(
-      '#title' => $title,
-      '#videos' => $response,
-      '#theme' => 'top_ten_block',
-      '#attached' => ['library' => ['proof_api/proof-api']],
-    );
+    return $build;
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
   {
     $proofAPIRequests = $container->get('proof_api.proof_api_requests');
+    $proofAPIUtilities = $container->get('proof_api.proof_api_utilities');
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $proofAPIRequests
+      $proofAPIRequests,
+      $proofAPIUtilities
       );
   }
 

@@ -54,7 +54,8 @@ class ProofAPIUtilities {
     return $page;
   }
 
-  public function buildVideoListPage($videos, $redirect, $cache) {
+  public function buildVideoListPage($videos, $redirect, $cache)
+  {
     $page = array(
       '#theme' => 'videos',
       '#videos' => $videos,
@@ -75,6 +76,17 @@ class ProofAPIUtilities {
 
     return $page;
   }
+
+    public function buildVideoListBlockPage($videos, $title) {
+      return array(
+        '#title' => $title,
+        '#videos' => $videos,
+        '#theme' => 'top_ten_block',
+        '#attached' => ['library' => ['proof_api/proof-api']],
+      );
+    }
+
+
 
 
   /**
