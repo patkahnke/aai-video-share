@@ -18,3 +18,10 @@ proof_api.top_ten_by_votes:
   route_name: proof_api.top_ten_by_votes
   menu_name: main
   weight: 4
+
+proof_api.new_video:
+  title: Add a Video
+  description: 'A link to the add video function'
+  route_name: proof_api.new_video
+  menu_name: main
+  weight: 5

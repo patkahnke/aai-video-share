@@ -111,6 +111,8 @@ class NewVideoForm extends FormBase
         $form_state->setErrorByName('slug', t('Sorry, the slug appears to be in the wrong format.'));
     } else if ($videoOrigin === null) {
         $form_state->setErrorByName('url', t('Sorry, this app only supports YouTube and Vimeo videos at this time.'));
+    } else if (date('N') > 5) {
+      $form_state->setErrorByName('title', t('Sorry, you cannot post videos on weekends.'));
     }
   }
 
@@ -126,7 +128,7 @@ class NewVideoForm extends FormBase
 
     $this->proofAPIRequests->postNewMovie($title, $url, $slug);
 
-    $form_state->setRedirect('proof_api.all_videos');
+    $form_state->setRedirect('proof_api.home');
     return;
   }
 

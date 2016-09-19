@@ -2,6 +2,15 @@
 
      'use strict';
 
+     /*@todo Find out why this method of using a callback function to redirect to the new video form isn't working. Would prefer
+     @todo this method rather than have the user go all the way to the form before finding out it doesn't work on weekends.
+      Attaches a custom AJAX callback command, "newVideoForm," to the AjaxCommands object, which gets called
+      by the "newVideo" controller function. Triggers a link to the new video form.
+      */
+     /*Drupal.AjaxCommands.prototype.newVideoForm = function(ajax, response, status) {
+         $(this).closest('#video--container').find('.new-video-form').trigger('click');
+     };*/
+
      /*
      Attaches a custom AJAX callback command, "view," to the AjaxCommands object, which gets called
      by the "addView" controller function. Updates the DOM with new number of views.
@@ -62,7 +71,7 @@
                          '<td class="votes-views ' + voteID + '">Votes: ' + voteTally + '</td>' +
                          '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
                          '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
-                         '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
+                         // '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
                          '</table>' +
                          '<div class="' + overlay + '">' +
                          '<div class="video-wrapper">' +

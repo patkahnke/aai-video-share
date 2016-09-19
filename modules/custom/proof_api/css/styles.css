@@ -36,8 +36,9 @@
 }
 
 .votes-views {
-    margin: 50px 50px 0 50px;
-    width: 120px;
+    margin: 50px 10px 0 10px;
+    width: 20%;
+    padding: 2px 2px 0 2px;
 }
 
 .video-links {
@@ -49,7 +50,7 @@
     position: relative;
     margin: 0 auto 50px auto;
     padding: 20px;
-    width: 100%;
+    width: 80%;
     color: lightgrey;
 }
 
@@ -73,7 +74,7 @@ width: 100%;
 
 
 .video-wrapper {
-    width: 80%;
+    width: 90%;
     max-width: 640px;
     position:relative;
     padding-bottom:56.25%;

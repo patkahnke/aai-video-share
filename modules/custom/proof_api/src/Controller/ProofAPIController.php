@@ -9,6 +9,7 @@ namespace Drupal\proof_api\Controller;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\ControllerBase;
+//use Drupal\proof_api\Ajax\NewVideoFormCommand;
 use Drupal\proof_api\Ajax\ViewCommand;
 use Drupal\proof_api\Ajax\VoteCommand;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
@@ -244,23 +245,29 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
-  public function newVideo()
+  public function newVideo() {
+    $response = $this->redirect('proof_api.new_video_form');
+    return $response;
+  }
+
+  /*@todo Find out why this method didn't work - I had added ajax and the class "use-ajax" to the link - removed it for the current method.
+  @todo would be preferable to have this method work so user doesn't go all the way to the form before getting a weekend error response
+   * public function newVideo()
   {
-    //At the moment, the error modal is working, but the eredirect to the form is not. Must be an issue with adding ajax to make
-    //the modal work.
+    $response = new AjaxResponse();
+
     if (date('N') < 6) {
-      $response = $this->redirect('proof_api.new_video_form');
+      $response->addCommand(new NewVideoFormCommand());
 
     } else {
       $title = 'Sorry - you cannot add a video on a weekend.';
       $content = array (
         '#attached' => ['library' => ['core/drupal.dialog.ajax']],
       );
-      $response = new AjaxResponse();
       $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
       return $response;
-  }
+  }*/
 
   /**
    * Posts a new +1 vote on a specific video through the ProofAPIRequests service, then
