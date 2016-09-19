@@ -85,6 +85,7 @@
                          $('.overlay').one('click', function () {
                              $(this).children().children()[0].src += '&autoplay=1';
                              $(this).removeClass('overlay');
+                             $(this).addClass('video-box');
                              $(this).parent().find('.add-view').trigger('click');
                          });
                  }

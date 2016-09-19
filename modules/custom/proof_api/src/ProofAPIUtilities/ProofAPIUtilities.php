@@ -13,6 +13,70 @@ namespace Drupal\proof_api\ProofAPIUtilities;
  */
 class ProofAPIUtilities {
 
+  public function sortAndPrepVideos($videos, $sortParam, $overlay, $arrayLength)
+  {
+    $sortParameter = array();
+
+    foreach ($videos as $video) {
+      $sortParameter[] = $video['attributes'][$sortParam];
+    }
+
+    array_multisort($sortParameter, SORT_DESC, $videos);
+
+    for ($i = 0; $i < count($videos); $i++) {
+      $url = $videos[$i]['attributes']['url'];
+      $embedURL = $this->convertToEmbedURL($url);
+      $videos[$i]['attributes']['embedURL'] = $embedURL;
+      $videos[$i]['attributes']['overlay'] = $overlay;
+      $videos = array_slice($videos, 0, $arrayLength, true);
+    };
+
+    return $videos;
+  }
+
+  public function buildNowPlayingPage($videos) {
+    $title = 'Now Playing - ' . $videos[0]['attributes']['title'];
+
+    $page = array(
+      '#videos' => $videos,
+      '#title' => $title,
+      '#theme' => 'videos',
+    );
+
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     */
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+    $page['#attached']['drupalSettings']['videoArray'] = $videos;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.home';
+
+    return $page;
+  }
+
+  public function buildVideoListPage($videos, $redirect, $cache) {
+    $page = array(
+      '#theme' => 'videos',
+      '#videos' => $videos,
+      '#redirectTo' => $redirect,
+      '#cache' => array
+      (
+        'max-age' => $cache,
+      ),
+    );
+
+    /**
+     * attach js and css libraries
+     * attach global variables for jQuery to reference when building the page
+     */
+    $page['#attached']['library'][] = 'proof_api/proof-api';
+    $page['#attached']['drupalSettings']['videoArray'] = $videos;
+    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
+
+    return $page;
+  }
+
+
   /**
    * Parses two provided urls and checks to see if they match each other (accounting for "http" and "https").
    * @param $url1

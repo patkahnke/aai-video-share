@@ -24,223 +24,35 @@ class ProofAPIController extends ControllerBase
   private $proofAPIRequests;
   private $proofAPIUtilities;
 
-  /**
-   * ProofAPIController constructor.
-   * @param ProofAPIRequests $proofAPIRequests
-   * @param ProofAPIUtilities $proofAPIUtilities
-   * @todo Move as much of this logic as possible to ProofAPIUtilities
-   */
   public function __construct(ProofAPIRequests $proofAPIRequests, ProofAPIUtilities $proofAPIUtilities)
   {
     $this->proofAPIRequests = $proofAPIRequests;
     $this->proofAPIUtilities = $proofAPIUtilities;
   }
 
-  public function nowPlaying()
-  {
-    $keyValueStore = $this->keyValue('proof_api');
-
-    $currentVideoID = $keyValueStore->get('currentVideoID');
-    $requestedVideoID = $keyValueStore->get('requestedVideoID');
-
-    if ($currentVideoID === $requestedVideoID) {
-
-      $allVideos = $this->proofAPIRequests->getAllVideos();
-      $createdAt = array();
-
-      foreach ($allVideos as $video) {
-        $createdAt[] = $video['attributes']['created_at'];
-      }
-
-      array_multisort($createdAt, SORT_DESC, $allVideos);
-
-      for ($i = 0; $i < count($allVideos); $i++) {
-        $url = $allVideos[$i]['attributes']['url'];
-        $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-        $allVideos[$i]['attributes']['embedURL'] = $embedURL;
-        $allVideos[$i]['attributes']['overlay'] = 'overlay';
-      };
-
-      $user = \Drupal::currentUser();
-      $userID = $user->id();
-      $currentVideo = array_slice($allVideos, 0, 1, true);
-      $currentVideoID = $currentVideo[0]['id'] . $userID;
-      $keyValueStore->set('currentVideo', $currentVideo);
-      $keyValueStore->set('requestedVideo', $currentVideo);
-      $keyValueStore->set('currentVideoID', $currentVideoID);
-      $keyValueStore->set('requestedVideoID', $currentVideoID);
-      $response = $currentVideo;
-
-    } else {
-      $autoplay = '&autoplay=1';
-      $requestedVideo = $keyValueStore->get('requestedVideo');
-      $url = $requestedVideo[0]['attributes']['url'];
-      $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-      $requestedVideo[0]['attributes']['embedURL'] = $embedURL . $autoplay;
-      $requestedVideo[0]['attributes']['overlay'] = 'video-box';
-      $currentVideo = $keyValueStore->get('currentVideo');
-      $currentVideoID = $keyValueStore->get('currentVideoID');
-      $keyValueStore->set('requestedVideo', $currentVideo);
-      $keyValueStore->set('requestedVideoID', $currentVideoID);
-      $response = $requestedVideo;
-    }
-
-    $title = 'Now Playing - ' . $response[0]['attributes']['title'];
-
-    $page = array(
-      '#videos' => $response,
-      '#title' => $title,
-      '#theme' => 'videos',
-    );
-
-    /**
-     * attach js and css libraries
-     * attach global variables for jQuery to reference when building the page
-     */
-    $page['#attached']['library'][] = 'proof_api/proof-api';
-    $page['#attached']['drupalSettings']['videoArray'] = $response;
-    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.home';
-
-    return $page;
-  }
-
-  /**
-   * Sends request to get all videos through ProofAPIRequests
-   * Creates a render array to display all the videos, with most recent first
-   * Calls ProofAPIUtilities to convert urls to embeddable urls
-   * @return AjaxResponse|mixed
-   */
   public function allVideos()
   {
-    $response = $this->proofAPIRequests->getAllVideos();
-      $createdAt = array();
-
-    foreach ($response as $video) {
-        $createdAt[] = $video['attributes']['created_at'];
-    }
-
-    array_multisort($createdAt, SORT_DESC, $response);
-
-      for ($i = 0; $i < count($response); $i++) {
-          $url = $response[$i]['attributes']['url'];
-          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-          $response[$i]['attributes']['embedURL'] = $embedURL;
-          $response[$i]['attributes']['overlay'] = 'overlay';
-      };
-
-    $page = array(
-        '#theme' => 'videos',
-        '#videos' => $response,
-        '#redirectTo' => 'proof_api.all_videos',
-        '#cache' => array
-      (
-        'max-age' => 0,
-      ),
-    );
-
-    /**
-     * attach js and css libraries
-     * attach global variables for jQuery to reference when building the page
-     */
-    $page['#attached']['library'][] = 'proof_api/proof-api';
-    $page['#attached']['drupalSettings']['videoArray'] = $response;
-    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
+    $videos = $this->proofAPIRequests->getAllVideos();
+    $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 1000);
+    $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.all_videos', 0);
 
     return $page;
   }
 
-  /**
-   * Sends request to get all videos through ProofAPIRequests
-   * Creates a render array to display the top ten videos by views, with most viewed first
-   * Calls ProofAPIUtilities to convert urls to embeddable urls
-   * @todo Move as much of this logic as possible to ProofAPIUtilities
-   * @return array
-   */
   public function topTenByViews()
   {
-      $response = $this->proofAPIRequests->getAllVideos();
-      $viewTally = array();
-
-      foreach ($response as $video) {
-          $viewTally[] = $video['attributes']['view_tally'];
-      }
-
-      array_multisort($viewTally, SORT_DESC, $response);
-      $response = array_slice($response, 0, 10, true);
-
-
-      for ($i = 0; $i < count($response); $i++) {
-          $url = $response[$i]['attributes']['url'];
-          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-          $response[$i]['attributes']['embedURL'] = $embedURL;
-          $response[$i]['attributes']['overlay'] = 'overlay';
-      };
-
-      $page[] = array(
-          '#theme' => 'videos',
-          '#videos' => $response,
-          '#redirectTo' => 'proof_api.top_ten_by_views',
-          '#cache' => array
-          (
-              'max-age' => 0,
-          ),
-      );
-
-    /**
-     * attach js and css libraries
-     * attach global variables for jQuery to reference when building the page
-     */
-    $page['#attached']['library'][] = 'proof_api/proof-api';
-    $page['#attached']['drupalSettings']['videoArray'] = $response;
-    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
+    $videos = $this->proofAPIRequests->getAllVideos();
+    $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'view_tally', 'overlay', 10);
+    $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.top_ten_by_views', 300);
 
     return $page;
   }
 
-  /**
-   * Sends request to get all videos through ProofAPIRequests
-   * Creates a render array to display the top ten videos by votes, with highest voted first
-   * Calls ProofAPIUtilities to convert urls to embeddable urls
-   * @todo Move as much of this logic as possible to ProofAPIUtilities
-   * @return array
-   */
   public function topTenByVotes()
   {
-    $response = $this->proofAPIRequests->getAllVideos();
-      $voteTally = array();
-
-      foreach ($response as $video) {
-          $voteTally[] = $video['attributes']['vote_tally'];
-      }
-
-      array_multisort($voteTally, SORT_DESC, $response);
-      $response = array_slice($response, 0, 10, true);
-
-
-      for ($i = 0; $i < count($response); $i++) {
-          $url = $response[$i]['attributes']['url'];
-          $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-          $response[$i]['attributes']['embedURL'] = $embedURL;
-          $response[$i]['attributes']['overlay'] = 'overlay';
-      };
-
-    $page[] = array(
-          '#theme' => 'videos',
-          '#videos' => $response,
-          '#redirectTo' => 'proof_api.top_ten_by_votes',
-          '#cache' => array
-          (
-              'max-age' => 0,
-          ),
-      );
-
-    /**
-     * attach js and css libraries
-     * attach global variables for jQuery to reference when building the page
-     */
-    $page['#attached']['library'][] = 'proof_api/proof-api';
-    $page['#attached']['drupalSettings']['videoArray'] = $response;
-    $page['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
+    $videos = $this->proofAPIRequests->getAllVideos();
+    $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'vote_tally', 'overlay', 10);
+    $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.top_ten_by_votes', 300);
 
     return $page;
   }
@@ -250,30 +62,68 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
-  /*@todo Find out why this method didn't work - I had added ajax and the class "use-ajax" to the link - removed it for the current method.
-  @todo would be preferable to have this method work so user doesn't go all the way to the form before getting a weekend error response
-   * public function newVideo()
+  public function viewVideo($videoID)
   {
-    $response = new AjaxResponse();
+    $keyValueStore = $this->keyValue('proof_api');
+    $videos = array();
 
-    if (date('N') < 6) {
-      $response->addCommand(new NewVideoFormCommand());
+    $videos[0] = $this->proofAPIRequests->getVideo($videoID);
+    $video = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'video-box', 1);
+
+    $user = \Drupal::currentUser();
+    $userID = $user->id();
+    $videoID = $videoID . $userID;
+    $keyValueStore->set('requestedVideo', $video);
+    $keyValueStore->set('requestedVideoID', $videoID);
+
+    return $this->redirect('proof_api.home');
+  }
+
+  public function nowPlaying()
+  {
+    $keyValueStore = $this->keyValue('proof_api');
+    $currentVideoID = $keyValueStore->get('currentVideoID');
+    $requestedVideoID = $keyValueStore->get('requestedVideoID');
+
+    if ($currentVideoID === $requestedVideoID) {
+
+      $videos = $this->proofAPIRequests->getAllVideos();
+      $currentVideo = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 1);
+
+      $user = \Drupal::currentUser();
+      $userID = $user->id();
+
+      $currentVideoID = $currentVideo[0]['id'] . $userID;
+
+      $keyValueStore->set('currentVideo', $currentVideo);
+      $keyValueStore->set('requestedVideo', $currentVideo);
+      $keyValueStore->set('currentVideoID', $currentVideoID);
+      $keyValueStore->set('requestedVideoID', $currentVideoID);
+
+      $response = $currentVideo;
 
     } else {
-      $title = 'Sorry - you cannot add a video on a weekend.';
-      $content = array (
-        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
-      );
-      $response->addCommand(new OpenModalDialogCommand($title, $content));
+      $requestedVideo = $keyValueStore->get('requestedVideo');
+      $requestedVideo = $this->proofAPIUtilities->sortAndPrepVideos($requestedVideo, 'created_at', 'video-box', 1);
+
+      $currentVideo = $keyValueStore->get('currentVideo');
+      $currentVideoID = $keyValueStore->get('currentVideoID');
+      $keyValueStore->set('requestedVideo', $currentVideo);
+      $keyValueStore->set('requestedVideoID', $currentVideoID);
+
+      $response = $requestedVideo;
     };
-      return $response;
-  }*/
+
+    $page = $this->proofAPIUtilities->buildNowPlayingPage($response);
+
+    return $page;
+  }
 
   /**
    * Posts a new +1 vote on a specific video through the ProofAPIRequests service, then
    * gets all videos through ProofAPIRequests and searches for the updated vote tally from the affected video
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
-   * Proof API automatically creates a new "view" on that video, which would inflate the view count.
+   * Proof API automatically creates a new "view" on that video, which would inflate the view count).
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
    * @param $videoID
    * @param $voteID
@@ -320,7 +170,7 @@ class ProofAPIController extends ControllerBase
    * Posts a new -1 vote on a specific video through the ProofAPIRequests service, then
    * gets all videos through ProofAPIRequests and searches for the updated vote tally from the affected video.
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
-   * Proof API automatically creates a new "view" on that video, which would inflate the view count.
+   * Proof API automatically creates a new "view" on that video, which would inflate the view count).
    * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
    * @param $videoID
    * @param $voteID
@@ -362,29 +212,12 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
-
-  public function viewVideo($videoID)
-  {
-    $keyValueStore = $this->keyValue('proof_api');
-    $response = array();
-    $response[0] = $this->proofAPIRequests->getVideo($videoID);
-    $url = $response[0]['attributes']['url'];
-    $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-    $response[0]['attributes']['embedURL'] = $embedURL;
-    $user = \Drupal::currentUser();
-    $userID = $user->id();
-    $responseID = $videoID . $userID;
-    $keyValueStore->set('requestedVideo', $response);
-    $keyValueStore->set('requestedVideoID', $responseID);
-    return $this->redirect('proof_api.home');
-  }
-
   /**
    * Posts a new "view" resource on a specific video through the ProofAPIRequests service, then
    * gets all videos through ProofAPIRequests and searches for the updated view tally from the affected video.
    * (the reason for getting all videos rather than the specific one is because when a specific video is requested, the
    * Proof API automatically creates a new "view" resource on that video, which would inflate the view count.
-   * Returns an AJAX response containing the new vote tally, as well as the "vote" callback command which updates the DOM.
+   * Returns an AJAX response containing the new view tally, as well as the "view" callback command which updates the DOM.
    * @param $videoID
    * @param $viewID
    * @return AjaxResponse
@@ -392,12 +225,12 @@ class ProofAPIController extends ControllerBase
   public function newView($videoID, $viewID)
   {
     $this->proofAPIRequests->postNewView($videoID);
-    $newVideoData = $this->proofAPIRequests->getAllVideos();
+    $videoData = $this->proofAPIRequests->getAllVideos();
     $viewTally = null;
 
-    for ($i = 0; $i < count($newVideoData); $i++) {
-      if ($newVideoData[$i]['id'] === $videoID) {
-        $viewTally = $newVideoData[$i]['attributes']['view_tally'];
+    for ($i = 0; $i < count($videoData); $i++) {
+      if ($videoData[$i]['id'] === $videoID) {
+        $viewTally = $videoData[$i]['attributes']['view_tally'];
       }
     };
 
@@ -407,11 +240,31 @@ class ProofAPIController extends ControllerBase
     return $response;
   }
 
+  /*@todo Figure out why this method didn't work - I had added ajax and the class "use-ajax" to the link - removed it for the current method.
+  @todo would be preferable to have this method work so user doesn't go all the way to the form before getting a weekend error response
+   * public function newVideo()
+  {
+    $response = new AjaxResponse();
+
+    if (date('N') < 6) {
+      $response->addCommand(new NewVideoFormCommand());
+
+    } else {
+      $title = 'Sorry - you cannot add a video on a weekend.';
+      $content = array (
+        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
+      );
+      $response->addCommand(new OpenModalDialogCommand($title, $content));
+    };
+      return $response;
+  }*/
+
   /**
    * Gets the ProofAPIRequests and ProofAPIUtilities services from the services container
    * @param ContainerInterface $container
    * @return static
    */
+
   public static function create(ContainerInterface $container)
   {
     $proofAPIRequests = $container->get('proof_api.proof_api_requests');

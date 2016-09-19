@@ -51,7 +51,6 @@
     margin: 0 auto 50px auto;
     padding: 20px;
     width: 80%;
-    color: lightgrey;
 }
 
 .overlay:before {
@@ -68,8 +67,7 @@ left: 0;
 position: relative;
 margin: 0 auto 50px auto;
 padding: 20px;
-width: 100%;
-    z-index: 0;
+width: 80%;
 }
 
 
