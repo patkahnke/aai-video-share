@@ -12,8 +12,7 @@ Proof API module contains classes for consuming the Proof API and displaying the
 
 KNOWN ISSUES (IN PROCESS):
 ======================
-Link to add a new video is broken, since ajax was added. It works to return a modal error response "Can't post video on
-weekends", but the good response to redirect to the new video form no longer works. Must be an issue with ajax responses and redirects.
+
 
 Author/Maintainer
 ======================
