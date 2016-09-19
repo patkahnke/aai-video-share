@@ -23,16 +23,17 @@
     border-radius: 8px;
 }
 
-.add-video-button {
-    background-color: darkblue;
+.menu {
+    background-color: lightgrey;
     border: none;
     color: white;
     padding: 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: x-small;
+    font-size: medium;
     border-radius: 8px;
+    margin-bottom: 50px;
 }
 
 .votes-views {
