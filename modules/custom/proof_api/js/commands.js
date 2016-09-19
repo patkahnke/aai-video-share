@@ -65,15 +65,16 @@
                          '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
                          '</table>' +
                          '<div class="' + overlay + '">' +
+                         '<div class="video-wrapper">' +
                          '<iframe id="player"' +
-                         'width="640" height="480"' +
+                          'width="640" height="360"' +
                          'src="https://' + videos[i].attributes.embedURL +
                          '></iframe>' +
                          '</div>' +
-                         '</div>');
-                         $('.overlay').on('click', function () {
-                             $(this).children()[0].src += '&autoplay=1';
-                             $(this).addClass('video-box');
+                             '</div' +
+                            '</div>');
+                         $('.overlay').one('click', function () {
+                             $(this).children().children()[0].src += '&autoplay=1';
                              $(this).removeClass('overlay');
                              $(this).parent().find('.add-view').trigger('click');
                          });

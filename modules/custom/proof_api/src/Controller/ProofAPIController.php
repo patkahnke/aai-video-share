@@ -244,15 +244,10 @@ class ProofAPIController extends ControllerBase
     return $page;
   }
 
-  /**
-   * Validates that video is being posted on a weekday
-   * If so, redirects to proof_api.new_video_form
-   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
-   */
   public function newVideo()
   {
-    $response = new AjaxResponse();
-
+    //At the moment, the error modal is working, but the eredirect to the form is not. Must be an issue with adding ajax to make
+    //the modal work.
     if (date('N') < 6) {
       $response = $this->redirect('proof_api.new_video_form');
 
@@ -261,6 +256,7 @@ class ProofAPIController extends ControllerBase
       $content = array (
         '#attached' => ['library' => ['core/drupal.dialog.ajax']],
       );
+      $response = new AjaxResponse();
       $response->addCommand(new OpenModalDialogCommand($title, $content));
     };
       return $response;

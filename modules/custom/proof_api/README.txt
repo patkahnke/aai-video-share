@@ -12,8 +12,8 @@ Proof API module contains classes for consuming the Proof API and displaying the
 
 KNOWN ISSUES (IN PROCESS):
 ======================
-Front page top ten links still need to be hooked up to play internally and count the views.
-Deployment: Coming
+Link to add a new video is broken, since ajax was added. It works to return a modal error response "Can't post video on
+weekends", but the good response to redirect to the new video form no longer works. Must be an issue with ajax responses and redirects.
 
 Author/Maintainer
 ======================
@@ -26,4 +26,4 @@ September 7, 2016
 
 README Updated On:
 ======================
-September 16, 2016
+September 19, 2016
