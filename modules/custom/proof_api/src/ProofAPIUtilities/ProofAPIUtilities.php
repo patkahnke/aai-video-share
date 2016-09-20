@@ -8,11 +8,21 @@
 namespace Drupal\proof_api\ProofAPIUtilities;
 
 /**
- * A service that provides helpful functions to be accessed by the proof_api module.
- * @todo refactor more functions from the ProofAPIController to this service.
+ * A service that provides pre-render functions to be accessed by the proof_api module.
  */
 class ProofAPIUtilities {
 
+  /**
+   * Takes in an array of video resources and sorts them according to the "sortParam" variable
+   * Calls the ConvertToEmbedURL function to create an embed video link
+   * Takes in the overlay variable to set the overlay class to either "overlay" or "video-box" (no overlay)
+   * Returns an array of the altered video data
+   * @param $videos
+   * @param $sortParam
+   * @param $overlay
+   * @param $arrayLength
+   * @return array
+   */
   public function sortAndPrepVideos($videos, $sortParam, $overlay, $arrayLength)
   {
     $sortParameter = array();
@@ -34,6 +44,11 @@ class ProofAPIUtilities {
     return $videos;
   }
 
+  /**
+   * Builds and returns the render array for the Now Playing page
+   * @param $videos
+   * @return array
+   */
   public function buildNowPlayingPage($videos) {
     $title = 'Now Playing - ' . $videos[0]['attributes']['title'];
 
@@ -54,6 +69,13 @@ class ProofAPIUtilities {
     return $page;
   }
 
+  /**
+   * Builds and returns the render array for the Video List page
+   * @param $videos
+   * @param $redirect
+   * @param $cache
+   * @return array
+   */
   public function buildVideoListPage($videos, $redirect, $cache)
   {
     $page = array(
@@ -77,7 +99,13 @@ class ProofAPIUtilities {
     return $page;
   }
 
-    public function buildVideoListBlockPage($videos, $title) {
+  /**
+   * Builds and returns the render array for the Video List Block Page
+   * @param $videos
+   * @param $title
+   * @return array
+   */
+  public function buildVideoListBlockPage($videos, $title) {
       return array(
         '#title' => $title,
         '#videos' => $videos,
@@ -85,9 +113,6 @@ class ProofAPIUtilities {
         '#attached' => ['library' => ['proof_api/proof-api']],
       );
     }
-
-
-
 
   /**
    * Parses two provided urls and checks to see if they match each other (accounting for "http" and "https").
@@ -196,6 +221,8 @@ class ProofAPIUtilities {
             $embedURL = $this->convertVimeo($url);
         }
 
+        /* wmode=opaque allows the z-index of the iFrame to be altered such that the overlay can cover it up.
+        Otherwise the iFrame will always be the top layer of the window.*/
         $urlAttributes = '?wmode=opaque&frameborder="0"style="border: solid 4px #37474F"allowfullscreen="allowfullscreen"';
         $embedURL = $embedURL . $urlAttributes;
 

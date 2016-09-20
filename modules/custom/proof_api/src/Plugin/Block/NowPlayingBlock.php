@@ -14,6 +14,7 @@ use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * NOTE: This block is not currently being used, but is being held for future reference.
  * Provides an iFrame for a video. Used on the front page to display most recent video added, and also to play videos
  * from the front page.
  *
@@ -29,6 +30,14 @@ class NowPlayingBlock extends BlockBase implements ContainerFactoryPluginInterfa
   private $proofAPIUtilities;
 
 
+  /**
+   * NowPlayingBlock constructor.
+   * @param array $configuration
+   * @param string $plugin_id
+   * @param mixed $plugin_definition
+   * @param ProofAPIRequests $proofAPIRequests
+   * @param ProofAPIUtilities $proofAPIUtilities
+   */
   public function __construct(array $configuration, $plugin_id, $plugin_definition,
                               ProofAPIRequests $proofAPIRequests,
                               ProofAPIUtilities $proofAPIUtilities)
@@ -38,63 +47,20 @@ class NowPlayingBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $this->proofAPIUtilities = $proofAPIUtilities;
   }
 
-  public function setStartUpVideo()
-  {
-    $response = $this->proofAPIRequests->getAllVideos();
-    $createdAt = array();
-
-    foreach ($response as $video) {
-      $createdAt[] = $video['attributes']['created_at'];
-    }
-
-    array_multisort($createdAt, SORT_DESC, $response);
-
-    for ($i = 0; $i < count($response); $i++) {
-      $url = $response[$i]['attributes']['url'];
-      $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-      $response[$i]['attributes']['embedURL'] = $embedURL;
-    };
-
-    $response = array_slice($response, 0, 1, true);
-  }
-
   /**
-   * {@inheritdoc}
+   * /**
+   * Builds a render array for the Most Recent Videos block.
+   * Gets all the videos through the ProofAPIRequests service
+   * Prepares the raw data received from ProofAPIRequests using the pre-render function SortAndPrepVideos attached to ProofAPIUtilities
+   * Builds the render array via the function BuildVideoListBlockPage attached to ProofAPIUtilities
+   * Includes the javascript file "commands" in the render array to build the DOM with jQuery
+   * @return array
    */
   public function build()
   {
-    $response = $this->proofAPIRequests->getAllVideos();
-    $createdAt = array();
-
-    foreach ($response as $video) {
-      $createdAt[] = $video['attributes']['created_at'];
-    }
-
-    array_multisort($createdAt, SORT_DESC, $response);
-
-    for ($i = 0; $i < count($response); $i++) {
-      $url = $response[$i]['attributes']['url'];
-      $embedURL = $this->proofAPIUtilities->convertToEmbedURL($url);
-      $response[$i]['attributes']['embedURL'] = $embedURL;
-    };
-
-    $response = array_slice($response, 0, 1, true);
-
-    $title = 'Now Playing - ' . $response[0]['attributes']['title'];
-
-    $build = array(
-      '#videos' => $response,
-      '#title' => $title,
-      '#theme' => 'now_playing',
-    );
-
-    /**
-     * attach js and css libraries
-     * attach global variables for jQuery to reference when building the page
-     */
-    $build['#attached']['library'][] = 'proof_api/proof-api';
-    $build['#attached']['drupalSettings']['videoArray'] = $response;
-    $build['#attached']['drupalSettings']['redirectTo'] = 'proof_api.all_videos';
+    $videos = $this->proofAPIRequests->getAllVideos();
+    $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 1);
+    $build = $this->proofAPIUtilities->buildVideoListBlockPage($videos, 'Now Playing');
 
     return $build;
   }

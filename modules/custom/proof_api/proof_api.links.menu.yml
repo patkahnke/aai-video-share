@@ -6,21 +6,21 @@ proof_api.all_videos:
   weight: 2
 
 proof_api.top_ten_by_views:
-  title: Most Viewed Videos
+  title: Most Viewed
   description: 'A link to the top ten most viewed videos'
   route_name: proof_api.top_ten_by_views
   menu_name: main
   weight: 3
 
 proof_api.top_ten_by_votes:
-  title: Highest Voted Videos
+  title: Highest Voted
   description: 'A link to the ten highest voted videos'
   route_name: proof_api.top_ten_by_votes
   menu_name: main
   weight: 4
 
 proof_api.new_video:
-  title: Add a Video
+  title: Add Video
   description: 'A link to the add video function'
   route_name: proof_api.new_video
   menu_name: main

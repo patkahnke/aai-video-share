@@ -2,8 +2,8 @@
 
      'use strict';
 
-     /*@todo Find out why this method of using a callback function to redirect to the new video form isn't working. Would prefer
-     @todo this method rather than have the user go all the way to the form before finding out it doesn't work on weekends.
+     /*@todo Figure out why this method of using a callback function to redirect to the new video form isn't working. Would prefer
+      this method rather than have the user go all the way to the form before finding out it doesn't work on weekends.
       Attaches a custom AJAX callback command, "newVideoForm," to the AjaxCommands object, which gets called
       by the "newVideo" controller function. Triggers a link to the new video form.
       */
@@ -56,24 +56,26 @@
                      var viewID = 'view' + i;
                      var overlay = videos[i].attributes.overlay;
                          console.log(videos[i].attributes.embedURL);
-                     /*
-                     "Overlay" is a solution for counting views on embedded videos. A transparent overlay is placed on the iFrame.
-                     On a click event on the overlay:
-                      - the "newView" function is called to update the view count
-                      - the embed url is refactored to autoplay the video, which triggers playback, and
-                      - the overlay is removed so the user can interact with the iFrame directly at that point.
-                      */
+
                      $('#video-container').append(
                          '<div class="individual-container">' +
                          '<table>' +
+
+                         //video stats info and voting buttons
                          '<a class="add-view use-ajax" href="http://aai-video-share.dd:8083/new_view/ajax/' + videoID + '/' + viewID + '"></a>' +
                          '<td class="votes-views ' + viewID + '">Views: ' + viewTally + '</td>' +
                          '<td class="votes-views ' + voteID + '">Votes: ' + voteTally + '</td>' +
-                         '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/' + videoID + '/' + voteID + '">Vote Up</a></td>' +
-                         '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/' + videoID + '/' + voteID + '">Vote Down</a><td>' +
-                         // '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
+                         '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/'
+                            + videoID + '/' + voteID + '">Vote Up</a></td>' +
+                         '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/'
+                            + videoID + '/' + voteID + '">Vote Down</a><td>' +
+                         // Saving this link for reference to the failed newVideoForm callback. '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
                          '</table>' +
+
+                         //the overlay variable allows for the page to be built without an overlay when sidebar video links are clicked
                          '<div class="' + overlay + '">' +
+
+                         //video wrapper is part of a css solution to make the iFrame responsive
                          '<div class="video-wrapper">' +
                          '<iframe id="player"' +
                           'width="640" height="360"' +
@@ -82,6 +84,14 @@
                          '</div>' +
                              '</div' +
                             '</div>');
+                     /*
+                      "Overlay" is a solution for counting views on embedded videos. A transparent overlay is placed on the iFrame.
+                      On a one-time click event on the overlay:
+                      - the "newView" function is called to update the view count
+                      - an autoplay script is appended to the embed url, which triggers playback, and
+                      - the overlay class is removed so the user can interact with the iFrame directly at that point.
+                      - the video-box class replaces the overlay class to provide a slightly larger viewing window
+                      */
                          $('.overlay').one('click', function () {
                              $(this).children().children()[0].src += '&autoplay=1';
                              $(this).removeClass('overlay');
