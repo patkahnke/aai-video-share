@@ -53,8 +53,8 @@
       <file leaf-file-name="README.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/README.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="450">
+              <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -369,12 +369,12 @@
       <workItem from="1473306251281" duration="36036000" />
       <workItem from="1473795312902" duration="63880000" />
       <workItem from="1474045585030" duration="61089000" />
-      <workItem from="1474308058081" duration="28172000" />
+      <workItem from="1474308058081" duration="28286000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="256690000" />
+    <option name="totallyTimeSpent" value="256804000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -750,8 +750,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/custom/proof_api/README.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state relative-caret-position="450">
+          <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
           <folding />
         </state>
       </provider>

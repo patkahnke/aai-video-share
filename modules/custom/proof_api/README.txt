@@ -21,8 +21,8 @@ KNOWN ISSUES (IN PROCESS):
  - It would be preferable if the videos that are played by clicking a link in one of the Video List blocks would play
     automatically in the Now Playing window, rather than requiring another mouse click. Currently, the video is being
     counted as "played" as soon as the link is clicked, which is the desired result, and the overlay is removed from
-    the video when it is displayed, but a second click is still required to actually play the video. The addition of "&autoplay=1"
-    to the embed url is not producing the desired result.
+    the video when it is displayed, but a second click is still required to actually play the video. The addition of
+    "&autoplay=1" to the embed url is not producing the desired result.
 
 Author/Maintainer
 ======================
