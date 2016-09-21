@@ -55,6 +55,7 @@
                      var voteID = 'vote' + i;
                      var viewID = 'view' + i;
                      var overlay = videos[i].attributes.overlay;
+                     console.log('videoID:', videoID)
 
                      $('#video-container').append(
                          '<div class="individual-container">' +

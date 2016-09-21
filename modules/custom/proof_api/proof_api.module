@@ -11,14 +11,20 @@ function videos_theme()
       'variables' => array(
           'videos' => null,
           'redirectTo' => null,
+          'cache' => array(
+            'max-age' => null,
+          )
       ),
       'template' => 'page',
-      ),
+    ),
 
     'top_ten_block' => array(
       'variables' => array(
         'videos' => null,
         'title' => null,
+        'cache' => array(
+          'max-age' => null,
+        )
       ),
       'template' => 'top-ten-block',
     ),
@@ -27,6 +33,9 @@ function videos_theme()
       'variables' => array(
         'embed_url' => null,
         'title' => null,
+        'cache' => array(
+          'max-age' => null,
+        )
       ),
       'template' => 'now-playing',
     ),
