@@ -40,7 +40,7 @@ class ProofAPIController extends ControllerBase
    * Gets all the videos through the ProofAPIRequests service
    * Prepares the raw data received from ProofAPIRequests using the pre-render function SortAndPrepVideos attached to ProofAPIUtilities
    * Builds the render array via the function BuildVideoListPage attached to ProofAPIUtilities
-   * Includes the javascript file "commands" in the render array to build the DOM with jQuery
+   * Includes the javascript file "commands" in the render array to build the DOM using jQuery
    * @return array
    */
   public function allVideos()
@@ -57,7 +57,7 @@ class ProofAPIController extends ControllerBase
    * Gets all the videos through the ProofAPIRequests service
    * Prepares the raw data received from ProofAPIRequests using the pre-render function SortAndPrepVideos attached to ProofAPIUtilities
    * Builds the render array via the function BuildVideoListPage attached to ProofAPIUtilities
-   * Includes the javascript file "commands" in the render array to build the DOM with jQuery
+   * Includes the javascript file "commands" in the render array to build the DOM using jQuery
    * @return array
    */
   public function topTenByViews()
@@ -74,7 +74,7 @@ class ProofAPIController extends ControllerBase
    * Gets all the videos through the ProofAPIRequests service
    * Prepares the raw data received from ProofAPIRequests using the pre-render function SortAndPrepVideos attached to ProofAPIUtilities
    * Builds the render array via the function BuildVideoListPage attached to ProofAPIUtilities
-   * Includes the javascript file "commands" in the render array to build the DOM with jQuery
+   * Includes the javascript file "commands" in the render array to build the DOM using jQuery
    * @return array
    */
   public function topTenByVotes()
