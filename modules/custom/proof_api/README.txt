@@ -16,8 +16,6 @@ KNOWN ISSUES (IN PROCESS):
  - It would be preferable to refactor the path to the New Video Form such that the "No Posting on Weekends" error message is
     displayed without leaving the current page, rather than after the user goes to the form and inputs video data.
     Research needed on why the AJAX callback function to do so is not working.
- - The links in the commands.js file that are appended to the DOM should be refactored to reflect internal links rather
-    than the full url. Research needed on how to accomplish this.
  - It would be preferable if the videos that are played by clicking a link in one of the Video List blocks would play
     automatically in the Now Playing window, rather than requiring another mouse click. Currently, the video is being
     counted as "played" as soon as the link is clicked, which is the desired result, and the overlay is removed from
@@ -26,7 +24,7 @@ KNOWN ISSUES (IN PROCESS):
 
 Author/Maintainer
 ======================
-- Pat Kahnke patkahnke@gmail.com
+- Pat Kahnke (patkahnke@gmail.com)
 
 README Created On:
 ======================
@@ -34,4 +32,4 @@ September 7, 2016
 
 README Updated On:
 ======================
-September 20, 2016
+September 22, 2016
