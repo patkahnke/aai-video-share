@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\proof_api\ProofAPIForms\ProofAPIForms.
+ * Contains \Drupal\proof_api\src\Form\NewVideoForm.
  */
 
-namespace Drupal\proof_api\ProofAPIForms;
+namespace Drupal\proof_api\Form;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormBase;

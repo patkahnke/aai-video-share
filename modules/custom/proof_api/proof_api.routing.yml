@@ -37,7 +37,7 @@ proof_api.new_video_form:
   path: '/new_video_form'
   defaults:
     _title: 'Post a New Video'
-    _form: '\Drupal\proof_api\form\NewVideoForm'
+    _form: '\Drupal\proof_api\Form\NewVideoForm'
   requirements:
     _permission: 'access content'
 
