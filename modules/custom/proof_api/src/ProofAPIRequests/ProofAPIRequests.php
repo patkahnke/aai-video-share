@@ -14,9 +14,10 @@ class ProofAPIRequests
 {
   /**
    * Performs a get request for all video resources and related resources from the Proof API.
+   * @param $authKey
    * @return mixed
    */
-  public function getAllVideos()
+  public function getAllVideos($authKey)
   {
     $ch = curl_init();
 
@@ -26,7 +27,7 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       'Content-Type: application/json',
-      'X-Auth-Token: kFDTf2t7HVfA24Red68sE31K'
+      "X-Auth-Token: " . $authKey
     ));
 
     $response = curl_exec($ch);
@@ -43,8 +44,9 @@ class ProofAPIRequests
    * @param $title
    * @param $url
    * @param $slug
+   * @param $authKey
    */
-  public function postNewMovie($title, $url, $slug)
+  public function postNewMovie($title, $url, $slug, $authKey)
   {
     $ch = curl_init();
 
@@ -62,7 +64,7 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
-      "X-Auth-Token: kFDTf2t7HVfA24Red68sE31K"
+      "X-Auth-Token: " . $authKey
     ));
 
     curl_exec($ch);
@@ -71,9 +73,10 @@ class ProofAPIRequests
 
   /**
    * Performs a post request for a new positive vote related to a specific video resource from the Proof API.
+   * @param $authKey
    * @param $videoID
    */
-  public function postNewVoteUp($videoID)
+  public function postNewVoteUp($videoID, $authKey)
   {
     $ch = curl_init();
 
@@ -89,7 +92,7 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
-      "X-Auth-Token: kFDTf2t7HVfA24Red68sE31K"
+      "X-Auth-Token: " . $authKey
     ));
 
     curl_exec($ch);
@@ -98,9 +101,10 @@ class ProofAPIRequests
 
   /**
    * Performs a post request for a new negative vote related to a specific video resource from the Proof API.
+   * @param $authKey
    * @param $videoID
    */
-  public function postNewVoteDown($videoID)
+  public function postNewVoteDown($videoID, $authKey)
   {
     $ch = curl_init();
 
@@ -116,19 +120,19 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
-      "X-Auth-Token: kFDTf2t7HVfA24Red68sE31K"
+      "X-Auth-Token: " . $authKey
     ));
 
     curl_exec($ch);
     curl_close($ch);
   }
 
-
   /**
-   * Performs a post request for a new view resource related to a specific video resource from the Proof API.
+   * Performs a post request for a new view related to a specific video resource from the Proof API.
+   * @param $authKey
    * @param $videoID
    */
-  public function postNewView($videoID)
+  public function postNewView($videoID, $authKey)
   {
     $ch = curl_init();
 
@@ -144,7 +148,7 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
-      "X-Auth-Token: kFDTf2t7HVfA24Red68sE31K"
+      "X-Auth-Token: " . $authKey
     ));
 
     curl_exec($ch);
@@ -154,9 +158,10 @@ class ProofAPIRequests
   /**
    * Performs a get request for a specific video resource from the Proof API.
    * @param $videoID
+   * @param $authKey
    * @return mixed
    */
-  public function getVideo($videoID)
+  public function getVideo($videoID, $authKey)
   {
     $ch = curl_init();
 
@@ -166,7 +171,7 @@ class ProofAPIRequests
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
-      "X-Auth-Token: kFDTf2t7HVfA24Red68sE31K"
+      "X-Auth-Token: " . $authKey
     ));
 
     $response = curl_exec($ch);

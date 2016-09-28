@@ -9,6 +9,7 @@ namespace Drupal\proof_api\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\key\KeyRepository;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,6 +27,7 @@ class MostRecentVideosBlock extends BlockBase implements ContainerFactoryPluginI
 
   private $proofAPIRequests;
   private $proofAPIUtilities;
+  private $keyRepository;
 
   /**
    * MostRecentVideosBlock constructor.
@@ -34,14 +36,17 @@ class MostRecentVideosBlock extends BlockBase implements ContainerFactoryPluginI
    * @param mixed $plugin_definition
    * @param ProofAPIRequests $proofAPIRequests
    * @param ProofAPIUtilities $proofAPIUtilities
+   * @param KeyRepository $keyRepository
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition,
                               ProofAPIRequests $proofAPIRequests,
-                              ProofAPIUtilities $proofAPIUtilities)
+                              ProofAPIUtilities $proofAPIUtilities,
+                              KeyRepository $keyRepository)
   {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->proofAPIRequests = $proofAPIRequests;
     $this->proofAPIUtilities = $proofAPIUtilities;
+    $this->keyRepository = $keyRepository;
   }
 
   /**
@@ -55,7 +60,8 @@ class MostRecentVideosBlock extends BlockBase implements ContainerFactoryPluginI
    */
   public function build()
   {
-    $videos = $this->proofAPIRequests->getAllVideos();
+    $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
+    $videos = $this->proofAPIRequests->getAllVideos($authKey);
     $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 10);
     $build = $this->proofAPIUtilities->buildVideoListBlockPage($videos, 'Most Recent Videos');
 
@@ -74,12 +80,14 @@ class MostRecentVideosBlock extends BlockBase implements ContainerFactoryPluginI
   {
     $proofAPIRequests = $container->get('proof_api.proof_api_requests');
     $proofAPIUtilities = $container->get('proof_api.proof_api_utilities');
+    $keyRepository = $container->get('key.repository');
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $proofAPIRequests,
-      $proofAPIUtilities
+      $proofAPIUtilities,
+      $keyRepository
       );
   }
 
