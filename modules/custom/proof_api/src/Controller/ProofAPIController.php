@@ -43,8 +43,9 @@ class ProofAPIController extends ControllerBase
    */
   public function allVideos()
   {
+    $route = 'videos?page&per_page';
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-    $videos = $this->proofAPIRequests->getAllVideos($authKey);
+    $videos = $this->proofAPIRequests->getCurl($authKey, $route);
     $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 1000);
     $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.all_videos', 0);
 
@@ -61,8 +62,9 @@ class ProofAPIController extends ControllerBase
    */
   public function topTenByViews()
   {
+    $route = 'videos?page&per_page';
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-    $videos = $this->proofAPIRequests->getAllVideos($authKey);
+    $videos = $this->proofAPIRequests->getCurl($authKey, $route);
     $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'view_tally', 'overlay', 10);
     $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.top_ten_by_views', 300);
 
@@ -79,8 +81,9 @@ class ProofAPIController extends ControllerBase
    */
   public function topTenByVotes()
   {
+    $route = 'videos?page&per_page';
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-    $videos = $this->proofAPIRequests->getAllVideos($authKey);
+    $videos = $this->proofAPIRequests->getCurl($authKey, $route);
     $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'vote_tally', 'overlay', 10);
     $page = $this->proofAPIUtilities->buildVideoListPage($videos, 'proof_api.top_ten_by_votes', 300);
 
@@ -112,10 +115,11 @@ class ProofAPIController extends ControllerBase
    */
   public function viewVideo($videoID)
   {
+    $route = 'videos/' . $videoID;
     $keyValueStore = $this->keyValue('proof_api');
     $videos = array();
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-    $videos[0] = $this->proofAPIRequests->getVideo($videoID, $authKey);
+    $videos[0] = $this->proofAPIRequests->getCurl($authKey, $route);
     $video = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'video-box', 1);
 
     $user = \Drupal::currentUser();
@@ -155,8 +159,9 @@ class ProofAPIController extends ControllerBase
 
     if ($currentVideoID === $requestedVideoID) {
 
+      $route = 'videos?page&per_page';
       $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-      $videos = $this->proofAPIRequests->getAllVideos($authKey);
+      $videos = $this->proofAPIRequests->getCurl($authKey, $route);
       $currentVideo = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'created_at', 'overlay', 1);
 
       $currentVideoID = $currentVideo[0]['id'] . $userID;
@@ -213,9 +218,14 @@ class ProofAPIController extends ControllerBase
         $response->addCommand(new OpenModalDialogCommand($title, $content));
       } else {
 
+      $route = 'videos?page&per_page';
       $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-      $this->proofAPIRequests->postNewVoteUp($videoID, $authKey);
-      $newVideoData = $this->proofAPIRequests->getAllVideos($authKey);
+      $routeID = 'videos/' . $videoID . '/votes';
+      $postData = '{
+        "opinion": 1
+        }';
+      $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+      $newVideoData = $this->proofAPIRequests->getCurl($authKey, $route);
 
       for ($i = 0; $i < count($newVideoData); $i++) {
         if ($newVideoData[$i]['id'] === $videoID) {
@@ -261,10 +271,14 @@ class ProofAPIController extends ControllerBase
       $response->addCommand(new OpenModalDialogCommand($title, $content));
 
     } else {
-
+      $route = 'videos?page&per_page';
       $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-      $this->proofAPIRequests->postNewVoteDown($videoID, $authKey);
-      $newVideoData = $this->proofAPIRequests->getAllVideos($authKey);
+      $routeID = 'videos/' . $videoID . '/votes';
+      $postData = '{
+        "opinion": -1
+        }';
+      $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+      $newVideoData = $this->proofAPIRequests->getCurl($authKey, $route);
 
       for ($i = 0; $i < count($newVideoData); $i++) {
         if ($newVideoData[$i]['id'] === $videoID) {
@@ -293,9 +307,13 @@ class ProofAPIController extends ControllerBase
   public function newView($videoID, $viewID)
   {
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-
-    $this->proofAPIRequests->postNewView($videoID, $authKey);
-    $videoData = $this->proofAPIRequests->getAllVideos($authKey);
+    $route = 'videos?page&per_page';
+    $routeID = 'views';
+    $postData = '{
+        \"video_id\": \"$videoID\"
+        }';
+    $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+    $videoData = $this->proofAPIRequests->getCurl($authKey, $route);
     $viewTally = null;
 
     for ($i = 0; $i < count($videoData); $i++) {

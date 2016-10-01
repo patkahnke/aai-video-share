@@ -10,6 +10,7 @@ namespace Drupal\proof_api\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\key\KeyRepository;
 use Drupal\proof_api\ProofAPIRequests\ProofAPIRequests;
 use Drupal\proof_api\ProofAPIUtilities\ProofAPIUtilities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,16 +22,19 @@ class NewVideoForm extends FormBase
 {
   private $proofAPIRequests;
   private $proofAPIUtilities;
+  private $keyRepository;
 
   /**
    * NewVideoForm constructor.
    * @param ProofAPIRequests $proofAPIRequests
    * @param ProofAPIUtilities $proofAPIUtilities
+   * @param KeyRepository $keyRepository
    */
-  public function __construct(ProofAPIRequests $proofAPIRequests, ProofAPIUtilities $proofAPIUtilities)
+  public function __construct(ProofAPIRequests $proofAPIRequests, ProofAPIUtilities $proofAPIUtilities, KeyRepository $keyRepository)
   {
-      $this->proofAPIRequests = $proofAPIRequests;
-      $this->proofAPIUtilities = $proofAPIUtilities;
+    $this->proofAPIRequests = $proofAPIRequests;
+    $this->proofAPIUtilities = $proofAPIUtilities;
+    $this->keyRepository = $keyRepository;
   }
 
   /**
@@ -94,9 +98,11 @@ class NewVideoForm extends FormBase
    * @param FormStateInterface $form_state
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
+    $route = 'videos?page&per_page';
     $url = $form_state->getValue('url');
     $slug = $form_state->getValue('slug');
-    $response = $this->proofAPIRequests->getAllVideos();
+    $response = $this->proofAPIRequests->getCurl($authKey, $route);
     $slugNoDashes = str_replace('-', '', $slug);
     $slugLowercase = ctype_lower($slugNoDashes);
 
@@ -125,8 +131,15 @@ class NewVideoForm extends FormBase
     $title = $form_state->getValue('title');
     $url = $form_state->getValue('url');
     $slug = $form_state->getValue('slug');
+    $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
+    $routeID = 'videos';
+    $postData = '"{
+            "title": "' . $title . '",
+            "url": "' . $url . '",
+            "slug": "' . $slug . '"
+        }"';
 
-    $this->proofAPIRequests->postNewMovie($title, $url, $slug);
+    $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
 
     $form_state->setRedirect('proof_api.home');
     return;
@@ -140,7 +153,8 @@ class NewVideoForm extends FormBase
   {
     $proofAPIRequests = $container->get('proof_api.proof_api_requests');
     $proofAPIUtilities = $container->get('proof_api.proof_api_utilities');
+    $keyRepository = $container->get('key.repository');
 
-    return new static($proofAPIRequests, $proofAPIUtilities);
+    return new static($proofAPIRequests, $proofAPIUtilities, $keyRepository);
   }
 }

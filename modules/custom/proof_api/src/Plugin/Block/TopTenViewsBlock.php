@@ -61,7 +61,8 @@ class TopTenViewsBlock extends BlockBase implements ContainerFactoryPluginInterf
   public function build()
   {
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
-    $videos = $this->proofAPIRequests->getAllVideos($authKey);
+    $route = 'videos?page&per_page';
+    $videos = $this->proofAPIRequests->getCurl($authKey, $route);
     $videos = $this->proofAPIUtilities->sortAndPrepVideos($videos, 'view_tally', 'overlay', 10);
     $build = $this->proofAPIUtilities->buildVideoListBlockPage($videos, 'Most Viewed Videos');
 
