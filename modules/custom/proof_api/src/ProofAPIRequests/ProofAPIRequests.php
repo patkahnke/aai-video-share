@@ -60,7 +60,8 @@ class ProofAPIRequests
     return $response;
   }*/
 
-  public function postCurl($authKey, $routeID, $postData)
+  public function postCurl($authKey, $routeID, $postDataKey1, $postDataValue1, $postDataKey2,
+                           $postDataValue2, $postDataKey3, $postDataValue3)
   {
     $ch = curl_init();
 
@@ -68,7 +69,11 @@ class ProofAPIRequests
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
     curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "{
+        \"$postDataKey1\": \"$postDataValue1\",
+        \"$postDataKey2\": \"$postDataValue2\",
+        \"$postDataKey3\": \"$postDataValue3\"
+        }");
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",

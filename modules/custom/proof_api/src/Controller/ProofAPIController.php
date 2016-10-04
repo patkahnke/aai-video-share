@@ -221,10 +221,14 @@ class ProofAPIController extends ControllerBase
       $route = 'videos?page&per_page';
       $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
       $routeID = 'videos/' . $videoID . '/votes';
-      $postData = '{
-        "opinion": 1
-        }';
-      $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+      $postDataKey1 = 'opinion';
+      $postDataValue1 = 1;
+      $postDataKey2 = '';
+      $postDataKey3 = '';
+      $postDataValue2 = '';
+      $postDataValue3 = '';
+      $this->proofAPIRequests->postCurl($authKey, $routeID, $postDataKey1, $postDataValue1, $postDataKey2,
+        $postDataValue2, $postDataKey3, $postDataValue3);
       $newVideoData = $this->proofAPIRequests->getCurl($authKey, $route);
 
       for ($i = 0; $i < count($newVideoData); $i++) {
@@ -274,10 +278,14 @@ class ProofAPIController extends ControllerBase
       $route = 'videos?page&per_page';
       $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
       $routeID = 'videos/' . $videoID . '/votes';
-      $postData = '{
-        "opinion": -1
-        }';
-      $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+      $postDataKey1 = 'opinion';
+      $postDataValue1 = -1;
+      $postDataKey2 = '';
+      $postDataKey3 = '';
+      $postDataValue2 = '';
+      $postDataValue3 = '';
+      $this->proofAPIRequests->postCurl($authKey, $routeID, $postDataKey1, $postDataValue1, $postDataKey2,
+        $postDataValue2, $postDataKey3, $postDataValue3);
       $newVideoData = $this->proofAPIRequests->getCurl($authKey, $route);
 
       for ($i = 0; $i < count($newVideoData); $i++) {
@@ -309,10 +317,9 @@ class ProofAPIController extends ControllerBase
     $authKey = $this->keyRepository->getKey('proof_api')->getKeyValue();
     $route = 'videos?page&per_page';
     $routeID = 'views';
-    $postData = '{
-        \"video_id\": \"$videoID\"
-        }';
-    $this->proofAPIRequests->postCurl($authKey, $routeID, $postData);
+    $postDataKey1 = 'video_id';
+    $postDataValue1 = $videoID;
+    $this->proofAPIRequests->postCurl($authKey, $routeID, $postDataKey1, $postDataValue1);
     $videoData = $this->proofAPIRequests->getCurl($authKey, $route);
     $viewTally = null;
 
