@@ -319,7 +319,12 @@ class ProofAPIController extends ControllerBase
     $routeID = 'views';
     $postDataKey1 = 'video_id';
     $postDataValue1 = $videoID;
-    $this->proofAPIRequests->postCurl($authKey, $routeID, $postDataKey1, $postDataValue1);
+    $postDataKey2 = '';
+    $postDataKey3 = '';
+    $postDataValue2 = '';
+    $postDataValue3 = '';
+    $this->proofAPIRequests->postCurl($authKey, $routeID, $postDataKey1, $postDataValue1, $postDataKey2,
+      $postDataValue2, $postDataKey3, $postDataValue3);
     $videoData = $this->proofAPIRequests->getCurl($authKey, $route);
     $viewTally = null;
 

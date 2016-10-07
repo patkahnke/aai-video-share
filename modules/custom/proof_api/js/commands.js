@@ -61,12 +61,12 @@
                          '<table>' +
 
                          //video stats info and voting buttons
-                         '<a class="add-view use-ajax" href="http://aai-video-share.dd:8083/new_view/ajax/' + videoID + '/' + viewID + '"></a>' +
+                         '<a class="add-view use-ajax" href="/new_view/ajax/' + videoID + '/' + viewID + '" ></a>' +
                          '<td class="votes-views ' + viewID + '">Views: ' + viewTally + '</td>' +
                          '<td class="votes-views ' + voteID + '">Votes: ' + voteTally + '</td>' +
-                         '<td class="votes-views"><a class="vote-up-button use-ajax" href="http://aai-video-share.dd:8083/vote_up/ajax/'
+                         '<td class="votes-views"><a class="vote-up-button use-ajax" href="/vote_up/ajax/'
                             + videoID + '/' + voteID + '">Vote Up</a></td>' +
-                         '<td class="votes-views"><a class="vote-down-button use-ajax" href="http://aai-video-share.dd:8083/vote_down/ajax/'
+                         '<td class="votes-views"><a class="vote-down-button use-ajax" href="/vote_down/ajax/'
                             + videoID + '/' + voteID + '">Vote Down</a><td>' +
                          // Saving this link for reference to the failed newVideoForm callback. '<td class="votes-views"><a class="add-video-button use-ajax" href="http://aai-video-share.dd:8083/new_video/ajax/">Add a Video!</a>' +
                          '</table>' +
